@@ -219,6 +219,7 @@ class Goods_model extends CI_Model
             'sortnum'      => (int)$data_post['sortnum'],
             'vedio'        => $data_post['vedio'],
             'edittime'     => time(),
+            'json'         => $data_post['json'],
         );
 
         $data_post['desc'] = remove_xss($this->input->post('desc'));//单独过滤详情xss

@@ -41,9 +41,10 @@ class Menu_model extends CI_Model
                 ),
             ),
             'tool' => array(
-                '<i class="Hui-iconfont">&#xe60d;</i> 广告管理' => array(
+                '<i class="Hui-iconfont">&#xe60d;</i> 工具管理' => array(
                     '广告管理' => '/manager/tool/adv/index',
                     '广告位管理' => '/manager/tool/adv_position/index',
+                    '图片管理' => '/manager/tool/img/index',
                 ),
             ),
         );

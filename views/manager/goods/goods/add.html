@@ -586,8 +586,8 @@
 
 			<div class="formControls col-2">
 
-				<input type="text" name="json" value="" class="input-text">
-
+				<textarea id="json"><{$item.json}></textarea>
+				<input type="hidden" name="json" value=""/>
 			</div>
 
 		</div>
@@ -645,6 +645,10 @@
 
 
 <script language="JavaScript">
+	$('#json').on('input propertychange',function(){
+    console.log($(this).val());
+		$("input[name=json]").val($(this).val());
+	})
 	//上传视频
 	function get_vedio(thi){
 		var fileObj  = document.getElementById("vedio_file").files[0];
