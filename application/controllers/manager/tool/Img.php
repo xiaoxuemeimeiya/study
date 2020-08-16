@@ -72,7 +72,7 @@ class Img extends CI_Controller
                 'title'       => $data_post['title'],
                 'addtime'     => $data_post['start_time'],
                 'link'        => $data_post['link'],
-                'sortnum'        => $data_post['sortnum'],
+                'sortnum'     => $data_post['sortnum'],
             );
             if (empty($update_data['title'])) {
                 error_json('名称不能为空');
@@ -105,7 +105,7 @@ class Img extends CI_Controller
     {
         $id = $this->input->post('id', true);
         if (empty($id)) error_json('id错误');
-        $res = $this->loop_model->delete_id('img', $id);var_dump( $res)
+        $res = $this->loop_model->delete_id('img', $id);
         if (!empty($res)) {
             admin_log_insert('删除图片' . $id);
             error_json('y');
