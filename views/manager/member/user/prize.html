@@ -38,6 +38,7 @@
 					<option value="7">部分退款</option>
 					<option value="8">交易取消</option>
 					<option value="9">订单作废</option>
+					<option value="9">返佣信息</option>
 					<option value="10">退款中</option>
 				</select>
 			</span>
@@ -79,6 +80,7 @@
 				<th width="50">订单状态</th>
 				<th width="80">下单时间</th>
 				<th width="80">返佣状态</th>
+				<th width="80">返佣状态</th>
 				<th width="110">操作</th>
 			</tr>
 			</thead>
@@ -97,6 +99,15 @@
 					<span class="label label-warning radius">未支付</span>
 					<{elseif $key.payment_status==1}>
 					<span class="label label-success radius">已支付</span>
+					<{/if}>
+				</td>
+				<td class="text-c">
+					<{if $key.rake_id==0}>
+					<span class="label label-warning radius">待返佣</span>
+					<{elseif $key.rake_id==1}>
+					<span class="label label-success radius">已返佣</span>
+					<{elseif $key.rake_id==2}>
+					<span class="label label-success radius">超出返佣</span>
 					<{/if}>
 				</td>
 				<td class="text-c"></td>

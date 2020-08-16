@@ -544,7 +544,7 @@ class User extends CI_Controller
     }
 
      /**
-     * 邀请信息编辑
+     * 邀请参团信息编辑
      */
     public function invite_group_edit($id)
     {
@@ -573,5 +573,28 @@ class User extends CI_Controller
         var_dump($detail);
         $this->load->helpers('upload_helper');//加载上传文件插件
         display('/member/user/prize_edit.html');
+    }
+
+    /**
+     * 返佣信息保存
+     */
+    public function prize_save($id)
+    {
+        if (is_post()) {
+            $data_post           = $this->input->post(NULL, true);
+            $update_data['rake_id'] = $data_post['rake_id'];
+            if(!$data_post['id'] ){
+                error_json('暂无商品');
+            }
+            //修改数据
+            $res = $this->loop_model->update_id('order', $update_data, $data_post['id']);
+            if (!empty($res)) {
+                error_json('y');
+            } else {
+                error_json('保存失败');
+            }
+        } else {
+            error_json('提交方式错误');
+        }
     }
 }
