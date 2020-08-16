@@ -570,7 +570,6 @@ class User extends CI_Controller
         $goods = $this->loop_model->get_where('goods',$where,'name');
         assign('detail',$detail);
         assign('goods',$goods);
-        var_dump($detail);
         $this->load->helpers('upload_helper');//加载上传文件插件
         display('/member/user/prize_edit.html');
     }
