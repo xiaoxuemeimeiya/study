@@ -72,6 +72,7 @@ class Img extends CI_Controller
                 'title'       => $data_post['title'],
                 'addtime'     => $data_post['start_time'],
                 'link'        => $data_post['link'],
+                'sortnum'        => $data_post['sortnum'],
             );
             if (empty($update_data['title'])) {
                 error_json('名称不能为空');
@@ -104,9 +105,9 @@ class Img extends CI_Controller
     {
         $id = $this->input->post('id', true);
         if (empty($id)) error_json('id错误');
-        $res = $this->loop_model->delete_id('adv', $id);
+        $res = $this->loop_model->delete_id('img', $id);var_dump( $res)
         if (!empty($res)) {
-            admin_log_insert('删除广告' . $id);
+            admin_log_insert('删除图片' . $id);
             error_json('y');
         } else {
             error_json('删除失败');
@@ -123,7 +124,7 @@ class Img extends CI_Controller
         if (empty($id) || $status == '') error_json('id错误');
         $status                = (int)$status;
         $update_data['status'] = $status;
-        $res                   = $this->loop_model->update_id('adv', $update_data, $id);
+        $res                   = $this->loop_model->update_id('img', $update_data, $id);
         if (!empty($res)) {
             if (is_array($id)) $id = join(',', $id);
             admin_log_insert('修改广告status为' . $status . 'id为' . $id);

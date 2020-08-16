@@ -57,7 +57,7 @@ class MY_Controller extends CI_Controller {
             //暂时关闭token验证
 
             if (!$this->tokenVerify($formData['token'], $formData['m_id'])) {
-                error_json('令牌失效');
+                error_json('令牌失效','3');
             }
 
         }
