@@ -51,50 +51,6 @@
         </div>
 
         <div class="row cl">
-
-			<label class="form-label col-2">商品图片：</label>
-
-			<div class="formControls col-10">
-
-				<button class="btn btn-primary radius" type="button" id="select_goods_pic">选择图片</button>
-
-			</div>
-
-        </div>
-        <div class="row cl">
-
-			<label class="form-label col-2"></label>
-
-			<input type="hidden" name="image" value="">
-
-			<div class="formControls col-10" id="goods_list_pic">
-
-				<!--商品图片-->
-
-			</div>
-
-			<!--商品图片模板-->
-
-			<script type='text/html' id='goods_picTemplate'>
-
-				{{each}}
-
-				<li class="f-l mr-10 text-c l-24 f-12">
-
-					<input type="hidden" name="image_list[]" value="{{$value.url}}">
-
-					<img src="{{$value.url}}" width="100" height="100" class="{{if $value.url=='<{$item.image}>'}}goods_img_current{{else}}goods_img_border{{/if}}"><br>
-
-					<a class="c-primary">删除</a>
-
-				</li>
-
-				{{/each}}
-
-			</script>
-
-		</div>
-        <div class="row cl">
             <div class="col-10 col-offset-2">
                 <input type="hidden" name="id" value="<{$detail.id}>">
                 <button onClick="$('#add').submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
