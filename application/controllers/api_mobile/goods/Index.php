@@ -128,6 +128,25 @@ class Index extends MY_Controller
         }
         $this->load->model('goods/goods_model');
         $item = $this->goods_model->get_detail($id);
+        if(!$item){
+            $this->ResArr["code"] =17;
+            $this->ResArr["msg"] = "商品不存在或者已下架";
+            echo json_encode($this->ResArr);exit;
+        }
+        //查看用户是否购买过此商品
+        $item['is_buy'] = 0;
+        $m_id = $this->input->get_post('m_id', true);
+        if($m_id){
+            $where_data['where']['good_id'] = $id;
+            $where_data['where']['m_id'] = $m_id;
+            $where_data['where']['payment_status'] = 1;//已经支付
+            $where_data['where_in']['status'] = [2,3,4,5];//没有退款
+            $order = $this->loop_model->get_list('order', $where_data, '', '', 'id asc');
+            if($order){
+                $item['is_buy'] = 1;
+            }
+        }
+
         $this->ResArr["code"] = 200;
         $this->ResArr["data"]= $item;
         echo json_encode($this->ResArr);exit;

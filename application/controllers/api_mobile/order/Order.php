@@ -98,13 +98,13 @@ class Order extends MY_Controller
     {
         $post_data = $this->input->get_post(NULL);
         if (empty($post_data['id'])){
-            $this->ResArr['code'] = 200;
+            $this->ResArr['code'] = 15;
             $this->ResArr['msg'] = '订单id不能为空';
             echo json_encode($this->ResArr);exit;
         }
         $order_data = $this->loop_model->get_where('order',array('id'=>$post_data['id']),'id,m_id,good_id,order_no,payment_status,status,sku_price_real,addtime,paytime');
         if (!$order_data){
-            $this->ResArr['code'] = 200;
+            $this->ResArr['code'] = 16;
             $this->ResArr['msg'] = '该订单不存在';
             echo json_encode($this->ResArr);exit;
         }
@@ -126,8 +126,8 @@ class Order extends MY_Controller
         $m_id   = $this->input->get_post('m_id');//用户,
       
         if (empty($good_id)) {
-            $this->ResArr["code"] = 3;
-            $this->ResArr["msg"]= '请选择课程';
+            $this->ResArr["code"] = 14;
+            $this->ResArr["msg"]= '缺失商品id';
             echo json_encode($this->ResArr);exit;
         }
         $payment_id    = 3;//支付方式（微信支付）
@@ -142,7 +142,7 @@ class Order extends MY_Controller
         }
         $goodData = $this->loop_model->get_where('goods',array('id'=>$good_id,'status'=>0));
         if(!$goodData){
-            $this->ResArr["code"] = 11;
+            $this->ResArr["code"] = 12;
             $this->ResArr["msg"]= '该商品已下架';
             echo json_encode($this->ResArr);exit;
         }
@@ -167,7 +167,7 @@ class Order extends MY_Controller
         //添加订单商品
         $res = $this->order_model->add($order_data,'');
         if($res != 'y'){
-            $this->ResArr["code"] = 11;
+            $this->ResArr["code"] = 13;
             $this->ResArr["msg"]= '生成订单失败 ';
             echo json_encode($this->ResArr);exit;
         }

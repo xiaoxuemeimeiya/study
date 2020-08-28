@@ -49,8 +49,8 @@
 				<td class="text-l"><{$key.nickname}></td>
 				<td><img style="width:40px;height:40px;border-radius:40px" src="<{$key.headimgurl}>" /></td>
 				<td class="text-l"><{$key.phone}></td>
-				<td class="text-l pointer"><a href='<{site_url("/manager/member/user/group/<{$key.id}>")}>'>参团详情</a></td>
-				<td class="text-l pointer"><a href='<{site_url("/manager/member/user/invite/<{$key.id}>")}>'>邀请详情</a></td>
+				<td class="text-l pointer"><a href='<{site_url("/manager/member/user/group")}>?m_id=<{$key.id}>'>参团详情</a></td>
+				<td class="text-l pointer"><a href='<{site_url("/manager/member/user/invite")}>?m_id=<{$key.id}>&order_id=<{$key}>'>邀请详情</a></td>
 				<td class="text-l pointer"><a href='<{site_url("/manager/member/user/invite_group/<{$key.id}>")}>'>邀请参团详情</a></td>
 				<td class="text-l pointer"><a href='<{site_url("/manager/member/user/prize/<{$key.id}>")}>'>返佣详情</a></td>
 				<td class="f-14 td-manage">

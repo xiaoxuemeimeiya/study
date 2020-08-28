@@ -17,7 +17,7 @@
 </nav>
 <div class="pd-20" style="padding-top: 0px;">
 	<div class="text-c pt-20">
-		<form action='<{site_url("/manager/member/user/group/<{$m_id}>")}>' method="post" class="form form-horizontal" id="search" name="search">
+		<form action='<{site_url("/manager/member/user/group")}>?m_id=<{$m_id}>' method="post" class="form form-horizontal" id="search" name="search">
 
 			<span class="select-box" style="width:150px">
 				<select name="payment_status" class="select">
@@ -56,12 +56,12 @@
 	</div>
 	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
 		<{if $search_where['is_del']==1}>
-		<a href="<{site_url('/manager/order/order/')}>" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe678;</i> 返回列表</a>
+		<a href="<{site_url('/manager/member/user/group')}>?m_id=<{$m_id}>" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe678;</i> 返回列表</a>
 		<a href="javascript:;" onclick="data_del(this,'<{site_url('/manager/order/order/delete/')}>')" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe60b;</i> 彻底删除</a>
 		<a href="javascript:;" onclick="data_del(this,'<{site_url('/manager/order/order/reduction_recycle/')}>')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe66b;</i> 还原</a>
 		<{else}>
 		<a href="javascript:;" onclick="data_del(this,'<{site_url('/manager/order/order/delete_recycle/')}>')" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe60b;</i> 批量删除</a>
-		<a href="<{site_url('/manager/order/order/')}>?is_del=1" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe6e2;</i> 回收站</a>
+		<a href="<{site_url('/manager/member/user/group/')}>?m_id=<{$m_id}>&is_del=1" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe6e2;</i> 回收站</a>
 		<{/if}>
 	</span></div>
 	<div class="mt-20">

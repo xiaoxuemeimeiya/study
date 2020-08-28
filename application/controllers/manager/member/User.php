@@ -324,8 +324,9 @@ class User extends CI_Controller
     /**
      * 参团列表
      */
-    public function group($m_id)
+    public function group()
     {
+        $m_id = (int)$this->input->get_post('m_id');
         //自动执行start********************************************
        //$m_id     = (int)$this->input->get_post('m_id');
        $this->load->model('order/order_model');

@@ -23,8 +23,8 @@ class Goods_model extends CI_Model
         $id = (int)$id;
         if (!empty($id)) {
             $goods_data = $this->loop_model->get_where('goods', array('id'=>$id),'id,vedio,name,sub_desc,sale,visit,market_price,sell_price');
-            if (empty($goods_data)) msg('商品不存在');
-            if ($goods_data['status'] != 0) msg('商品已下架');
+            if (empty($goods_data)) return false;//msg('商品不存在');
+            if ($goods_data['status'] != 0) return false; //msg('商品已下架');
             $goods_data['market_price'] = format_price($goods_data['market_price']);
             $goods_data['sell_price']   = format_price($goods_data['sell_price']);
             //商品描述
