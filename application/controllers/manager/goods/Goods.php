@@ -22,13 +22,13 @@ class Goods extends CI_Controller
         $path = "./uploads";
 
         // 判断错误号
-
+        var_dump($files);
         if (@$files['error'] == 0) {
 
             // 判断文件类型
 
             $ext = strtolower(pathinfo(@$files['name'],PATHINFO_EXTENSION));
-
+            var_dump($ext);
             if (!in_array($ext,$imagesExt)){
 
                 error_json('非法文件类型');
