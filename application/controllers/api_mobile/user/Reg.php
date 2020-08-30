@@ -75,7 +75,7 @@ class Reg extends CI_Controller
                     if($user_data['is_true'] == 1 || isset($user_data['nickname'])){
                         $is_register = 1;
                     }
-                    if($user_data['top_id'] != null && ['top_id'] > 1 ){
+                    if($user_data['top_id'] != null && $user_data['top_id'] > 1 ){
                         $is_bind = true;
                     }
                     //手机号是否绑定
@@ -199,6 +199,10 @@ class Reg extends CI_Controller
                  $res = $this->loop_model->insert('user',$addData);
             }
             if($res > 0){
+                $is_bind = false;
+                if($findopenid['top_id'] != null && $findopenid['top_id'] > 1 ){
+                    $is_bind = true;
+                }
                 $this->ResArr["code"] = 200;
                 $salt = substr(uniqid(), -6);
                 $openid = $this->loop_model->get_where('user',["openid"=>$data['openId']]);
@@ -209,6 +213,7 @@ class Reg extends CI_Controller
                     'salt' => $salt,
                     'expire' => time() + 5 * 24 * 3600,
                     'is_register' => 1,
+                    'is_bind' => $is_bind
                 ];
                 //cache('save', 'user_token_' . $openid['id'], $token, time() + 30 * 24 * 3600);//保存token
                 $this->ResArr['code'] = 200;
