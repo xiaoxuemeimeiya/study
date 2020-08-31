@@ -18,7 +18,8 @@ class MY_Controller extends CI_Controller {
         'api_mobile/user/info/validation_code',
         'api_mobile/user/info/free_card',
         'api_mobile/goods/index/adv',
-        'api_mobile/goods/index/good'
+        'api_mobile/goods/index/good',
+        'api_mobile/order/invite/order_detail'
     ];
 	
 	public function __construct()

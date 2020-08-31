@@ -426,7 +426,7 @@ class User extends CI_Controller
       $where_data['where']['o.share_uid'] = $m_id;
 
       //搜索条件end
-      $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,o.sku_price_real,o.addtime,o.paytime,m.nickname,k.name';
+      $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,o.sku_price_real,o.addtime,o.paytime,m.id as m_id,m.nickname,k.name';
       $where_data['join']   = array(
           array('user as m', 'o.m_id=m.id'),
           array('goods as k', 'o.good_id=k.id'),
@@ -457,12 +457,12 @@ class User extends CI_Controller
         //$m_id = $getData['m_id'];
         $where_data['select'] = 'a.id,a.name,a.position,a.mobile,a.username,a.password,a.sendtime,a.endtime,a.status,a.addtime,b.nickname,b.headimgurl';
         $where_data['join']   = array(
-            array('user b', 'a.m_id=b.id'),
+            array('card a', 'a.m_id=b.id','left'),
         );
         $where_data['where']['b.top_id'] = $m_id;
-        $card = $this->loop_model->get_list('card a',$where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc');
+        $card = $this->loop_model->get_list('user b',$where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc');
         assign('list', $card);
-        $all_rows = $this->loop_model->get_list_num('card a', $where_data);//所有数量
+        $all_rows = $this->loop_model->get_list_num('user b', $where_data);//所有数量
         assign('page_count', ceil($all_rows / $pagesize));
         display('/member/user/invite.html');
     }
