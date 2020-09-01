@@ -378,7 +378,7 @@ class User extends CI_Controller
         assign('search_where', $search_where);
 
        //搜索条件end
-       $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,o.sku_price_real,o.addtime,o.paytime,m.headimgurl,m.nickname,k.name';
+       $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,o.order_price,o.sku_price_real,o.addtime,o.paytime,m.headimgurl,m.nickname,k.name';
        $where_data['join']   = array(
            array('user as m', 'o.m_id=m.id'),
            array('goods as k', 'o.good_id=k.id'),
@@ -425,7 +425,7 @@ class User extends CI_Controller
       $where_data['where']['o.share_uid'] = $m_id;
 
       //搜索条件end
-      $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,o.sku_price_real,o.addtime,o.paytime,m.id as m_id,m.nickname,k.name';
+      $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,o.order_price,o.sku_price_real,o.addtime,o.paytime,m.id as m_id,m.nickname,k.name';
       $where_data['join']   = array(
           array('user as m', 'o.m_id=m.id'),
           array('goods as k', 'o.good_id=k.id'),
@@ -470,10 +470,10 @@ class User extends CI_Controller
     /**
      * 返佣列表
      */
-    public function prize()
+    public function prize($m_id)
     {
          //自动执行start********************************************
-         $m_id     = (int)$this->input->get_post('m_id');
+         //$m_id     = (int)$this->input->get_post('m_id');
          $this->load->model('order/order_model');
          $this->order_model->auto_cancel();//自动取消超时的订单
          $this->order_model->auto_confirm();//自动确认超时的订单
@@ -490,7 +490,7 @@ class User extends CI_Controller
          $where_data['where']['o.share_uid'] = $m_id;
  
          //搜索条件end
-         $where_data['select'] = 'o.id,o.rake_id,o.order_no,o.payment_status,o.status,o.sku_price_real,o.addtime,o.paytime,m.nickname,k.name';
+         $where_data['select'] = 'o.id,o.rake_id,o.order_no,o.payment_status,o.status,o.order_price,o.sku_price_real,o.addtime,o.paytime,m.nickname,k.name';
          $where_data['join']   = array(
              array('user as m', 'o.m_id=m.id'),
              array('goods as k', 'o.good_id=k.id'),
@@ -578,16 +578,16 @@ class User extends CI_Controller
     /**
      * 返佣信息保存
      */
-    public function prize_save($id)
+    public function prize_save()
     {
         if (is_post()) {
             $data_post           = $this->input->post(NULL, true);
             $update_data['rake_id'] = $data_post['rake_id'];
             if(!$data_post['id'] ){
-                error_json('暂无商品');
+                error_json('暂无该订单');
             }
             //修改数据
-            $res = $this->loop_model->update_id('order', $update_data, $data_post['id']);
+            $res = $this->loop_model->update_id('order', $update_data, ['id'=>$data_post['id']]);
             if (!empty($res)) {
                 error_json('y');
             } else {
