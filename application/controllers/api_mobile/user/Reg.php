@@ -188,7 +188,24 @@ class Reg extends CI_Controller
 
                 $userinfo = $this->loop_model->get_where("user",["id"=>$getData["top_id"]],'id');
                 if($userinfo){
-                    $addData['top_id'] = $userinfo["id"];
+                    //查看是否被绑定
+                    $binddata = $this->loop_model->get_where("user_bind",["bind_id"=>$getData["top_id"]]);
+                    if($binddata){
+                        //未过期
+                        if(time() - $binddata['addtime'] < 180*24*3600){
+                            //提示该用户已被绑定
+                        }else{
+                            //已过期
+                            $res = $this->loop_model->update_where("user",['top_id'=>''],["openid"=>$data['openId']]);
+                            $res = $this->loop_model->update_where("user_bind",['status'=>2],["id"=>$binddata['id']]);
+                            //新插入
+                            $res = $this->loop_model->insert("user_bind",['top_id'=>''],["openid"=>$data['openId']]);
+
+                            $addData['top_id'] = $userinfo["id"];
+                        }
+                    }
+
+
                 }
             }
             $findopenid = $this->loop_model->get_where('user',["openid"=>$data['openId']]);

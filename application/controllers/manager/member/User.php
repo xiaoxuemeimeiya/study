@@ -402,10 +402,9 @@ class User extends CI_Controller
       //自动执行start********************************************
       //$m_id     = (int)$this->input->get_post('m_id');
       $this->load->model('order/order_model');
-      $this->order_model->auto_cancel();//自动取消超时的订单
-      $this->order_model->auto_confirm();//自动确认超时的订单
+      //$this->order_model->auto_cancel();//自动取消超时的订单
+      //$this->order_model->auto_confirm();//自动确认超时的订单
       //自动执行end**********************************************
-
       $pagesize = 20;//分页大小
       $page     = (int)$this->input->get_post('per_page');
       $page <= 1 ? $page = 1 : $page = $page;//当前页数
@@ -433,6 +432,7 @@ class User extends CI_Controller
       );
       //查到数据
       $order_list = $this->loop_model->get_list('order as o', $where_data, $pagesize, $pagesize * ($page - 1), 'o.id desc');//列表
+        var_dump($order_list);
       assign('list', $order_list);
       //开始分页start
       $all_rows = $this->loop_model->get_list_num('order as o', $where_data);//所有数量

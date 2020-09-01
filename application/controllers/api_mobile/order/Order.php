@@ -161,7 +161,14 @@ class Order extends MY_Controller
         $order_data['order_price'] =price_format($goodData['sell_price']);
         if ($order_data['order_price'] <= 0) $order_data['order_price'] = 0;//订单少于0元的时候直接等于0元
 
-        $order_data['share_uid']  = $this->input->get_post('share_uid') ? $this->input->get_post('share_uid') : '';//分享者id
+        //查看该用户是否绑定其他用户
+        $userbind = $this->loop_model->get_where('user',array('top_id',$this->input->get_post('m_id')));
+        if($userbind){
+            //判断绑定是否过期
+            $order_data['share_uid']  = $userbind['top_id'];//分享者id
+        }else{
+            $order_data['share_uid']  = $this->input->get_post('share_uid') ? $this->input->get_post('share_uid') : '';//分享者id
+        }
 
         $this->load->model('order/order_model');
         //添加订单商品
