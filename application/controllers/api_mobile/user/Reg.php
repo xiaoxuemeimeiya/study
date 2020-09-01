@@ -185,8 +185,8 @@ class Reg extends CI_Controller
             }
             */
             if(isset($getData["top_id"])||!empty($getData["top_id"])){
-
                 $userinfo = $this->loop_model->get_where("user",["id"=>$getData["top_id"]],'id');
+                /*
                 if($userinfo){
                     //查看是否被绑定
                     $binddata = $this->loop_model->get_where("user_bind",["bind_id"=>$getData["top_id"]]);
@@ -205,9 +205,9 @@ class Reg extends CI_Controller
                         }
                     }
                 }else{
-                $addData['top_id'] = $userinfo["id"];
-            }
-
+                */
+                    $addData['top_id'] = $userinfo["id"];
+                //}
             }
             $findopenid = $this->loop_model->get_where('user',["openid"=>$data['openId']]);
             if($findopenid){
