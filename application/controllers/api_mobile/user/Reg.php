@@ -204,9 +204,10 @@ class Reg extends CI_Controller
                             $addData['top_id'] = $userinfo["id"];
                         }
                     }
+                }else{
+                $addData['top_id'] = $userinfo["id"];
+            }
 
-
-                }
             }
             $findopenid = $this->loop_model->get_where('user',["openid"=>$data['openId']]);
             if($findopenid){
