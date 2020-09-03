@@ -72,9 +72,9 @@ class Order_model extends CI_Model
         }
 
         if (!empty($res)) {
-            return 'y';
+            return $res;
         } else {
-            return '保存失败';
+            return false;
         }
     }
 

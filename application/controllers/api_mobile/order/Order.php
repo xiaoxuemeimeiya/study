@@ -173,7 +173,7 @@ class Order extends MY_Controller
         $this->load->model('order/order_model');
         //添加订单商品
         $res = $this->order_model->add($order_data,'');
-        if($res != 'y'){
+        if($res <1){
             $this->ResArr["code"] = 13;
             $this->ResArr["msg"]= '生成订单失败 ';
             echo json_encode($this->ResArr);exit;
@@ -184,6 +184,43 @@ class Order extends MY_Controller
         }
         $all_order_price = $order_data['order_price'];
         $order_no[]      = $order_data['order_no'];
+
+        //是否生成返利订单
+        if(isset($order_data['share_uid']) && !empty($order_data['share_uid'])){
+            //插入分佣
+            $sameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'good_id'=> $good_id,'payment_status'=>1],'','paytime desc');
+            $total = $this->loop_model->get_list_num('order',['m_id'=>$order_data['share_uid'],'good_id'=> $good_id,'payment_status'=>1]);
+            if($sameorder && $total<5){
+                //返佣20%
+                $rakedata['share_order_id'] = $sameorder['id'];
+                $rakedata['order_id'] = $res;
+                $rakedata['rake_id'] = 0;
+                $rakedata['rake_price'] = $sameorder['order_price']*0.2;
+                $rakedata['order_price'] = $sameorder['order_price'];
+                $rakedata['addtime'] = time();
+            }elseif($sameorder && $total>5){
+                //返佣5%
+                $dissameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'payment_status'=>1],'','paytime desc');
+                $rakedata['share_order_id'] = $dissameorder['id'];
+                $rakedata['order_id'] = $res;
+                $rakedata['rake_id'] = 0;
+                $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
+                $rakedata['order_price'] = $dissameorder['order_price'];
+                $rakedata['addtime'] = time();
+            }else{
+                $dissameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'payment_status'=>1],'','paytime desc');
+                if($dissameorder){
+                    //返佣5%
+                    $rakedata['share_order_id'] = $dissameorder['id'];
+                    $rakedata['order_id'] = $res;
+                    $rakedata['rake_id'] = 0;
+                    $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
+                    $rakedata['order_price'] = $dissameorder['order_price'];
+                    $rakedata['addtime'] = time();
+                }
+            }
+            $rakeres = $this->loop_model->add($rakedata);
+        }
        
         //订单金额为0时，订单自动完成
         if ($all_order_price <= 0) {
