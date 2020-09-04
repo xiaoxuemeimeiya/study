@@ -203,6 +203,10 @@ class Reg extends CI_Controller
 
                             $addData['top_id'] = $userinfo["id"];
                         }
+                    }else{
+                        //新插入
+                        $res = $this->loop_model->insert("user_bind",['top_id'=>''],["openid"=>$data['openId']]);
+                        $addData['top_id'] = $userinfo["id"];
                     }
                 }else{
 
