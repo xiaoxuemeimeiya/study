@@ -184,6 +184,7 @@ class Reg extends CI_Controller
                 }
             }
             */
+            $findopenid = $this->loop_model->get_where('user',["openid"=>$data['openId']]);
             if(isset($getData["top_id"])||!empty($getData["top_id"])){
                 $userinfo = $this->loop_model->get_where("user",["id"=>$getData["top_id"]],'id');
 
@@ -205,7 +206,10 @@ class Reg extends CI_Controller
                         }
                     }else{
                         //新插入
-                        $res = $this->loop_model->insert("user_bind",['top_id'=>''],["openid"=>$data['openId']]);
+                        $bind['m_id'] = $findopenid['id'];
+                        $bind['bind_id'] = $findopenid['id'];
+                        $bind['addtime'] = time();
+                        $res = $this->loop_model->insert("user_bind",$bind);
                         $addData['top_id'] = $userinfo["id"];
                     }
                 }else{
@@ -213,7 +217,7 @@ class Reg extends CI_Controller
                     $addData['top_id'] = $userinfo["id"];
                 }
             }
-            $findopenid = $this->loop_model->get_where('user',["openid"=>$data['openId']]);
+
             if($findopenid){
                 $res = $this->loop_model->update_where("user",$addData,["openid"=>$data['openId']]);
             }else{
