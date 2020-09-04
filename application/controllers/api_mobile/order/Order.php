@@ -208,7 +208,7 @@ class Order extends MY_Controller
                 $rakedata['order_price'] = $dissameorder['order_price'];
                 $rakedata['addtime'] = time();
             }else{
-                $dissameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'payment_status'=>1],'','paytime desc');var_dump($dissameorder);
+                $dissameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'payment_status'=>1],'','paytime desc');
                 if($dissameorder){
                     //返佣5%
                     $rakedata['share_order_id'] = $dissameorder['id'];
