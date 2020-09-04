@@ -198,6 +198,7 @@ class Order extends MY_Controller
                 $rakedata['rake_price'] = $sameorder['order_price']*0.2;
                 $rakedata['order_price'] = $sameorder['order_price'];
                 $rakedata['addtime'] = time();
+                $rakeres = $this->loop_model->add($rakedata);
             }elseif($sameorder && $total>5){
                 //返佣5%
                 $dissameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'payment_status'=>1],'','paytime desc');
@@ -207,6 +208,7 @@ class Order extends MY_Controller
                 $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
                 $rakedata['order_price'] = $dissameorder['order_price'];
                 $rakedata['addtime'] = time();
+                $rakeres = $this->loop_model->add($rakedata);
             }else{
                 $dissameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'payment_status'=>1],'','paytime desc');
                 if($dissameorder){
