@@ -200,13 +200,16 @@ class Reg extends CI_Controller
                             $res = $this->loop_model->update_where("user",['top_id'=>''],["openid"=>$data['openId']]);
                             $res = $this->loop_model->update_where("user_bind",['status'=>2],["id"=>$binddata['id']]);
                             //新插入
-                            $res = $this->loop_model->insert("user",['top_id'=>''],["openid"=>$data['openId']]);
+                            $bind['m_id'] = $userinfo["id"];
+                            $bind['bind_id'] = $findopenid['id'];
+                            $bind['addtime'] = time();
+                            $res = $this->loop_model->insert("user_bind",$bind);
 
                             $addData['top_id'] = $userinfo["id"];
                         }
                     }else{
                         //新插入
-                        $bind['m_id'] = $getData["top_id"];
+                        $bind['m_id'] = $userinfo["id"];
                         $bind['bind_id'] = $findopenid['id'];
                         $bind['addtime'] = time();
                         $res = $this->loop_model->insert("user_bind",$bind);
