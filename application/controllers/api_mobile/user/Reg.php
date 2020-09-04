@@ -206,7 +206,7 @@ class Reg extends CI_Controller
                         }
                     }else{
                         //新插入
-                        $bind['m_id'] = $findopenid['id'];
+                        $bind['m_id'] = $getData["top_id"];
                         $bind['bind_id'] = $findopenid['id'];
                         $bind['addtime'] = time();
                         $res = $this->loop_model->insert("user_bind",$bind);
