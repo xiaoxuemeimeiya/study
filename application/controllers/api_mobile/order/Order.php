@@ -217,9 +217,10 @@ class Order extends MY_Controller
                     $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
                     $rakedata['order_price'] = $dissameorder['order_price'];
                     $rakedata['addtime'] = time();
+                    $rakeres = $this->loop_model->add($rakedata);
                 }
             }
-            $rakeres = $this->loop_model->add($rakedata);
+
         }
        
         //订单金额为0时，订单自动完成
