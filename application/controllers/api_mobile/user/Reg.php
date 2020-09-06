@@ -229,7 +229,10 @@ class Reg extends CI_Controller
             }
             if($res > 0){
                 $is_bind = false;
-                if(isset($getData["top_id"])&&!empty($getData["top_id"]) ){
+                if($findopenid['top_id'] != null && $findopenid['top_id'] > 1 ){
+                    $is_bind = true;
+                }
+				if(isset($getData["top_id"])&&!empty($getData["top_id"]) ){
                     $is_bind = true;
                 }
                 $this->ResArr["code"] = 200;
