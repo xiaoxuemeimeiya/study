@@ -246,6 +246,7 @@ class Reg extends CI_Controller
                 ];
                 //cache('save', 'user_token_' . $openid['id'], $token, time() + 30 * 24 * 3600);//保存token
                 $this->ResArr['code'] = 200;
+				$this->ResArr['data'] = $tokenData;
                 //$this->ResArr['data'] = $tokenData;
                 $this->ResArr['msg'] = '数据更新成功';
                 echo json_encode($this->ResArr);
