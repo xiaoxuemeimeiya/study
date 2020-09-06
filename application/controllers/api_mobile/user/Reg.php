@@ -190,7 +190,7 @@ class Reg extends CI_Controller
 
                 if($userinfo){
                     //查看是否被绑定
-                    $binddata = $this->loop_model->get_where("user_bind",["bind_id"=>$getData["top_id"]]);
+                    $binddata = $this->loop_model->get_where("user_bind",["bind_id"=>$findopenid["id"]]);
                     if($binddata){
                         //未过期
                         if(time() - $binddata['addtime'] < 180*24*3600){
