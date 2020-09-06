@@ -27,7 +27,7 @@ class Loop_model extends CI_Model
             } else {
                 $this->db->insert_batch($table, $data);
             }
-            $insert_id = $this->db->insert_id();
+            $insert_id = $this->db->insert_id();echo $this->db->last_query()."<br>";
             if (!empty($insert_id)) {
                 return $insert_id;
             } else {
