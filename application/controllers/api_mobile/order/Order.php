@@ -225,6 +225,7 @@ var_dump($order_data['share_uid']);
                     $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
                     $rakedata['order_price'] = $dissameorder['order_price'];
                     $rakedata['addtime'] = time();
+					var_dump($rakedata);
                     $rakeres = $this->loop_model->add('order_rake',$rakedata);
 					var_dump($rakeres);
                 }
