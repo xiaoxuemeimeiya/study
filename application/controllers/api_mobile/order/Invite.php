@@ -126,9 +126,9 @@ class Invite extends MY_Controller
     {
         //自动执行start********************************************
         $m_id     = (int)$this->input->get_post('m_id');
-        $this->load->model('order/order_model');
-        $this->order_model->auto_cancel();//自动取消超时的订单
-        $this->order_model->auto_confirm();//自动确认超时的订单
+        //$this->load->model('order/order_model');
+        //$this->order_model->auto_cancel();//自动取消超时的订单
+        //$this->order_model->auto_confirm();//自动确认超时的订单
         //自动执行end**********************************************
 
         $pagesize = 20;//分页大小
@@ -178,9 +178,9 @@ class Invite extends MY_Controller
     {
         //自动执行start********************************************
         $m_id     = (int)$this->input->get_post('m_id');
-        $this->load->model('order/order_model');
-        $this->order_model->auto_cancel();//自动取消超时的订单
-        $this->order_model->auto_confirm();//自动确认超时的订单
+        //$this->load->model('order/order_model');
+        //$this->order_model->auto_cancel();//自动取消超时的订单
+        //$this->order_model->auto_confirm();//自动确认超时的订单
         //自动执行end**********************************************
 
         $pagesize = 20;//分页大小
