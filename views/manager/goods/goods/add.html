@@ -229,7 +229,7 @@
 
 						<th width="70">销售价格</th>
 
-						<th width="70">重量(克)</th>
+						<!--<th width="70">重量(克)</th>-->
 
 						<th width="70">起订量</th>
 
@@ -321,31 +321,25 @@
 
 						<td>
 
-							<input type="text" class="input-text" value="{{$value.store_nums}}" name="store_nums[]" style="width: 60px;" datatype="n" nullmsg="库存不能为空" errormsg="库存只能是数字">
+							<input type="text" class="input-text" value="{{$value.store_nums}}" name="store_nums[]" style="width: 60px;">
 
 						</td>
 
 						<td>
 
-							<input type="text" class="input-text" value="{{$value.market_price}}" name="market_price[]" style="width: 60px;" datatype="price" nullmsg="市场价格不能为空" errormsg="市场价格格式错误">
+							<input type="text" class="input-text" value="{{$value.market_price}}" name="market_price[]" style="width: 60px;">
 
 						</td>
 
 						<td>
 
-							<input type="text" class="input-text" value="{{$value.sell_price}}" name="sell_price[]" style="width: 60px;" datatype="price" nullmsg="销售价格不能为空" errormsg="销售价格格式错误">
+							<input type="text" class="input-text" value="{{$value.sell_price}}" name="sell_price[]" style="width: 60px;">
 
 						</td>
 
 						<td>
 
-							<input type="text" class="input-text" value="{{$value.weight}}" name="weight[]" style="width: 60px;" datatype="n" nullmsg="重量不能为空" errormsg="重量只能是数字">
-
-						</td>
-
-						<td>
-
-							<input type="text" class="input-text" value="{{if $value.minimum}}{{$value.minimum}}{{else}}1{{/if}}" name="minimum[]" style="width: 60px;" datatype="n" nullmsg="起订量不能为空" errormsg="起订量只能是数字">
+							<input type="text" class="input-text" value="{{if $value.minimum}}{{$value.minimum}}{{else}}1{{/if}}" name="minimum[]" style="width: 60px;">
 
 						</td>
 
@@ -360,7 +354,7 @@
 			</div>
 
 		</div>
-
+<!--
 		<div class="row cl">
 
 			<label class="form-label col-2"></label>
@@ -376,6 +370,7 @@
 			</div>
 
 		</div>
+		-->
 
 		<div class="row cl">
 
