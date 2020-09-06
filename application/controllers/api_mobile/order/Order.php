@@ -184,12 +184,14 @@ class Order extends MY_Controller
         }
         $all_order_price = $order_data['order_price'];
         $order_no[]      = $order_data['order_no'];
-
+var_dump($order_data['share_uid']);
         //是否生成返利订单
         if(isset($order_data['share_uid']) && !empty($order_data['share_uid'])){
             //插入分佣
+			var_dump(787878);
             $sameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'good_id'=> $good_id,'payment_status'=>1],'','paytime desc');
             $total = $this->loop_model->get_list_num('order',['where'=>['m_id'=>$order_data['share_uid'],'good_id'=> $good_id,'payment_status'=>1]]);
+			var_dump($sameorder);
             if($sameorder && $total<5){
                 //返佣20%
                 $rakedata['share_order_id'] = $sameorder['id'];
@@ -201,7 +203,9 @@ class Order extends MY_Controller
                 $rakeres = $this->loop_model->add($rakedata);
             }elseif($sameorder && $total>5){
                 //返佣5%
+				var_dump(8888);
                 $dissameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'payment_status'=>1],'','paytime desc');
+				var_dump($dissameorder);
                 $rakedata['share_order_id'] = $dissameorder['id'];
                 $rakedata['order_id'] = $res;
                 $rakedata['rake_id'] = 0;
@@ -210,7 +214,9 @@ class Order extends MY_Controller
                 $rakedata['addtime'] = time();
                 $rakeres = $this->loop_model->add($rakedata);
             }else{
+				var_dump(77777);
                 $dissameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'payment_status'=>1],'','paytime desc');
+				var_dump($dissameorder);
                 if($dissameorder){
                     //返佣5%
                     $rakedata['share_order_id'] = $dissameorder['id'];
