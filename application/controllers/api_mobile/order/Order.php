@@ -200,7 +200,7 @@ var_dump($order_data['share_uid']);
                 $rakedata['rake_price'] = $sameorder['order_price']*0.2;
                 $rakedata['order_price'] = $sameorder['order_price'];
                 $rakedata['addtime'] = time();
-                $rakeres = $this->loop_model->add($rakedata);
+                $rakeres = $this->loop_model->add('order_rake',$rakedata);
             }elseif($sameorder && $total>5){
                 //返佣5%
 				var_dump(8888);
@@ -212,7 +212,7 @@ var_dump($order_data['share_uid']);
                 $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
                 $rakedata['order_price'] = $dissameorder['order_price'];
                 $rakedata['addtime'] = time();
-                $rakeres = $this->loop_model->add($rakedata);
+                $rakeres = $this->loop_model->add('order_rake',$rakedata);
             }else{
 				var_dump(77777);
                 $dissameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'payment_status'=>1],'','paytime desc');
@@ -225,7 +225,7 @@ var_dump($order_data['share_uid']);
                     $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
                     $rakedata['order_price'] = $dissameorder['order_price'];
                     $rakedata['addtime'] = time();
-                    $rakeres = $this->loop_model->add($rakedata);
+                    $rakeres = $this->loop_model->add('order_rake',$rakedata);
                 }
             }
 
