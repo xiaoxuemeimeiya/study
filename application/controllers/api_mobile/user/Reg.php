@@ -185,7 +185,7 @@ class Reg extends CI_Controller
             }
             */
             $findopenid = $this->loop_model->get_where('user',["openid"=>$data['openId']]);
-            if(isset($getData["top_id"])||!empty($getData["top_id"])){
+            if(isset($getData["top_id"])&&!empty($getData["top_id"])){
                 $userinfo = $this->loop_model->get_where("user",["id"=>$getData["top_id"]],'id');
 
                 if($userinfo){
@@ -229,7 +229,7 @@ class Reg extends CI_Controller
             }
             if($res > 0){
                 $is_bind = false;
-                if($findopenid['top_id'] != null && $findopenid['top_id'] > 1 ){
+                if(isset($getData["top_id"])&&!empty($getData["top_id"]) ){
                     $is_bind = true;
                 }
                 $this->ResArr["code"] = 200;
