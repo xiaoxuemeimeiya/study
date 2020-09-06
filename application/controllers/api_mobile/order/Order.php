@@ -186,7 +186,7 @@ class Order extends MY_Controller
         $order_no[]      = $order_data['order_no'];
 
         //是否生成返利订单
-        if(isset($order_data['share_uid'])&& $order_data['share_uid']!= undefined && !empty($order_data['share_uid'])){
+        if(isset($order_data['share_uid'])&& $order_data['share_uid']!= 'undefined' && !empty($order_data['share_uid'])){
             //插入分佣
             $sameorder = $this->loop_model->get_where('order',['m_id'=>$order_data['share_uid'],'good_id'=> $good_id,'payment_status'=>1],'','paytime desc');
             $total = $this->loop_model->get_list_num('order',['where'=>['m_id'=>$order_data['share_uid'],'good_id'=> $good_id,'payment_status'=>1]]);
