@@ -197,6 +197,7 @@ class Order extends MY_Controller
                 $rakedata['rake_id'] = 0;
                 $rakedata['rake_price'] = $sameorder['order_price']*0.2;
                 $rakedata['order_price'] = $sameorder['order_price'];
+                $rakedata['rate'] = 20;
                 $rakedata['addtime'] = time();
                 $rakeres = $this->loop_model->insert('order_rake',$rakedata);
             }elseif($sameorder && $total>5){
@@ -207,6 +208,7 @@ class Order extends MY_Controller
                 $rakedata['rake_id'] = 0;
                 $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
                 $rakedata['order_price'] = $dissameorder['order_price'];
+                $rakedata['rate'] = 5;
                 $rakedata['addtime'] = time();
                 $rakeres = $this->loop_model->insert('order_rake',$rakedata);
             }else{
@@ -218,6 +220,7 @@ class Order extends MY_Controller
                     $rakedata['rake_id'] = 0;
                     $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
                     $rakedata['order_price'] = $dissameorder['order_price'];
+                    $rakedata['rate'] = 5;
                     $rakedata['addtime'] = time();
                     $rakeres = $this->loop_model->insert('order_rake',$rakedata);
                 }

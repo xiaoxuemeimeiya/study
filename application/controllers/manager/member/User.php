@@ -489,10 +489,11 @@ class User extends CI_Controller
          $where_data['where']['o.share_uid'] = $m_id;
  
          //搜索条件end
-         $where_data['select'] = 'o.id,o.rake_id,o.order_no,o.payment_status,o.status,o.order_price,o.sku_price_real,o.addtime,o.paytime,m.nickname,k.name';
+         $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,o.addtime,o.paytime,m.nickname,k.name,f.rake_id,convert(f.order_price/10000,decimal(10,2)) as order_price,convert(f.rake_price/10000,decimal(10,2)) as rake_price';
          $where_data['join']   = array(
              array('user as m', 'o.m_id=m.id'),
              array('goods as k', 'o.good_id=k.id'),
+             array('order_rake as f', 'o.id=f.order_id'),
          );
          //查到数据
          $order_list = $this->loop_model->get_list('order as o', $where_data, $pagesize, $pagesize * ($page - 1), 'o.id desc');//列表
