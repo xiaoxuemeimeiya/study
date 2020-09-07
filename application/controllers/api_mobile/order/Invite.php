@@ -151,7 +151,7 @@ class Invite extends MY_Controller
         $where_data['where']['o.share_uid'] = $m_id;
 
         //搜索条件end
-        $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,o.sku_price_real,o.addtime,o.paytime,m.nickname,k.name';
+        $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,convert(o.order_price/10000,decimal(10,2)) as order_price,convert(o.sku_price_real/10000,decimal(10,2)) as sku_price_real,o.addtime,o.paytime,m.nickname,k.name';
         $where_data['join']   = array(
             array('user as m', 'o.m_id=m.id'),
             array('goods as k', 'o.good_id=k.id'),
