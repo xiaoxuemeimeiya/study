@@ -372,15 +372,17 @@ class Order_model extends CI_Model
                     //修改订单状态
                     $res      = $this->loop_model->update_where('order', array('status' => 9), array('id' => $order_id));
                     $sku_list = $this->loop_model->get_list('order_sku', array('where' => array('order_id' => $order_id)));
-                    foreach ($sku_list as $key) {
-                        //没有发货的还原商品库存
-                        if ($key['is_send'] == 0) {
-                            self::update_store_nums($key['sku_id'], $key['sku_num'], 'add');
+                    if($sku_list) {
+                        foreach ($sku_list as $key) {
+                            //没有发货的还原商品库存
+                            if ($key['is_send'] == 0) {
+                                self::update_store_nums($key['sku_id'], $key['sku_num'], 'add');
+                            }
                         }
+                        //退还优惠券
+                        $this->load->model('market/coupons_model');
+                        $this->coupons_model->back_coupons($order_data['coupons_id']);
                     }
-                    //退还优惠券
-                    $this->load->model('market/coupons_model');
-                    $this->coupons_model->back_coupons($order_data['coupons_id']);
                     return 'y';
                 } else {
                     return '作废失败';
@@ -849,6 +851,7 @@ class Order_model extends CI_Model
         if (!empty($order_list)) {
             foreach ($order_list as $key) {
                 $up_res = self::admin_cancel($key['id'], '系统', '系统自动作废');
+
             }
         }
     }
