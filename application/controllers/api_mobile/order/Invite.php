@@ -25,11 +25,11 @@ class Invite extends MY_Controller
         $m_id = $getData['m_id'];
         $where_data['select'] = 'a.name,a.position,a.mobile,a.status,a.addtime,b.nickname,b.headimgurl';
         $where_data['join']   = array(
-            array('user b', 'a.m_id=b.id'),
+            array('card a', 'a.m_id=b.id','left'),
         );
         $where_data['where']['b.top_id'] = $m_id;
-        $card = $this->loop_model->get_list('card a',$where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc');
-        $all_rows = $this->loop_model->get_list_num('card a', $where_data);//所有数量
+        $card = $this->loop_model->get_list('user b',$where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc');
+        $all_rows = $this->loop_model->get_list_num('user b', $where_data);//所有数量
 
         $this->ResArr["code"] = 200;
         $this->ResArr['data'] = [
