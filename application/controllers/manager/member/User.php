@@ -454,9 +454,10 @@ class User extends CI_Controller
         if ($status != '') $where_data['where']['a.status'] = $status;
 
         //$m_id = $getData['m_id'];
-        $where_data['select'] = 'a.id,a.name,a.position,a.mobile,a.username,a.password,a.sendtime,a.endtime,a.status,a.addtime,b.nickname,b.headimgurl';
+        $where_data['select'] = 'a.id,a.name,a.position,IFNULL(a.mobile,c.phone) as mobile,a.username,a.password,a.sendtime,a.endtime,a.status,a.addtime,b.nickname,b.headimgurl';
         $where_data['join']   = array(
             array('card a', 'a.m_id=b.id','left'),
+            array('phone c', 'c.m_id=b.id','left'),
         );
         $where_data['where']['b.top_id'] = $m_id;
         $card = $this->loop_model->get_list('user b',$where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc');
