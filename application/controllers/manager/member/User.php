@@ -571,8 +571,10 @@ class User extends CI_Controller
         $where['id'] = $id;
         $detail = $this->loop_model->get_where('order',$where);
         $goods = $this->loop_model->get_where('goods',$where,'name');
+        $rate = $this->loop_model->get_where('order_rake',['order_id'=>$detail['id']]);
         assign('detail',$detail);
         assign('goods',$goods);
+        assign('rate',$rate);
         $this->load->helpers('upload_helper');//加载上传文件插件
         display('/member/user/prize_edit.html');
     }
@@ -589,10 +591,20 @@ class User extends CI_Controller
                 error_json('暂无该订单');
             }
             //修改数据
+            $this->db->trans_start();
             $res = $this->loop_model->update_id('order', $update_data, ['id'=>$data_post['id']]);
-            if (!empty($res)) {
-                error_json('y');
+            if (!empty($res) ) {
+                $res1 = $this->loop_model->update_where('order_rake', $update_data, ['order_id'=>$data_post['id']]);
+                if (!empty($res) ) {
+                    $this->db->trans_commit();
+                    error_json('y');
+                }else{
+                    $this->db->trans_rollback();
+                    error_json('保存失败');
+                }
+
             } else {
+                $this->db->trans_rollback();
                 error_json('保存失败');
             }
         } else {
