@@ -21,16 +21,19 @@ class Invite extends MY_Controller
         $pagesize = 20;//分页大小
         $page     = (int)$getData['per_page'];
         $page <= 1 ? $page = 1 : $page = $page;//当前页数
+        $type = $this->input->post_get('type');
+        if ($type != '') $where_data['where']['b.status'] = $type;
 
         $m_id = $getData['m_id'];
-        $where_data['select'] = 'a.name,a.position,IFNULL(a.mobile,c.phone) as mobile,a.status,a.addtime,b.nickname,b.headimgurl,c.phone';
+        $where_data['select'] = 'a.name,a.position,IFNULL(a.mobile,c.phone) as mobile,a.status,a.addtime,a.sendtime as verytime,d.nickname,d.headimgurl,c.phone,b.status as type,b.addtime as bindtime';
         $where_data['join']   = array(
-            array('card a', 'a.m_id=b.id','left'),
-            array('phone c', 'c.m_id=b.id','left'),
+            array('card a', 'a.m_id=b.bind_id','left'),
+            array('phone c', 'c.m_id=b.bind_id','left'),
+            array('user d', 'd.id=b.bind_id','left'),
         );
-        $where_data['where']['b.top_id'] = $m_id;
-        $card = $this->loop_model->get_list('user b',$where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc');
-        $all_rows = $this->loop_model->get_list_num('user b', $where_data);//所有数量
+        $where_data['where']['b.m_id'] = $m_id;
+        $card = $this->loop_model->get_list('user_bind b',$where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc');
+        $all_rows = $this->loop_model->get_list_num('user_bind b', $where_data);//所有数量
 
         $this->ResArr["code"] = 200;
         $this->ResArr['data'] = [

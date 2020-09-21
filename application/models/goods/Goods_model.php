@@ -27,6 +27,7 @@ class Goods_model extends CI_Model
             if ($goods_data['status'] != 0) return false; //msg('商品已下架');
             $goods_data['market_price'] = format_price($goods_data['market_price']);
             $goods_data['sell_price']   = format_price($goods_data['sell_price']);
+            $goods_data['endtime']   = $goods_data['endtime'] ? date("Y-m-d H;i:s",$goods_data['endtime']) : '';
             //商品描述
             $desc               = $this->loop_model->get_where('goods_desc', array('goods_id' => $id), 'desc');
             $goods_data['desc'] = $desc['desc'];
@@ -180,6 +181,8 @@ class Goods_model extends CI_Model
                 }
                 $sku_data[] = $k;
             }
+
+            $row['endtime'] = date('Y-m-d H:i:s',$row['endtime']);//sku的规格名称
             $row['spec_name'] = $spec_name;//sku的规格名称
             $row['sku_list']  = $sku_data;
             return $row;
@@ -219,6 +222,7 @@ class Goods_model extends CI_Model
             'sortnum'      => (int)$data_post['sortnum'],
             'vedio'        => $data_post['vedio'],
             'edittime'     => time(),
+            'endtime'     => strtotime($data_post['endtime']),
             'json'         => $data_post['json'],
         );
 
