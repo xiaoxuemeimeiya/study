@@ -220,7 +220,7 @@ class Goods_model extends CI_Model
             'unit'         => $data_post['unit'],
             'status'       => (int)$data_post['status'],
             'sortnum'      => (int)$data_post['sortnum'],
-            'vedio'        => $data_post['vedio'],
+            'vedio'        => $data_post['type']==1 ? $data_post['vedio'] :$data_post['vedio_url'],
             'edittime'     => time(),
             'endtime'     => strtotime($data_post['endtime']),
             'json'         => $data_post['json'],

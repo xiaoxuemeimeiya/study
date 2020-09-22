@@ -551,8 +551,32 @@
 			</script>
 
 		</div>
-
 		<div class="row cl">
+
+			<label class="form-label col-2"><span class="c-red">*</span>视频上传方式：</label>
+
+			<div class="formControls col-10">
+
+				<button onclick="check_upload(1)" class="btn btn-primary radius" type="button" id="upload_file_1">上传视频文件</button>
+				<button onclick="check_upload(2)" class="btn radius" type="button" id="upload_url_1">上传视频路径</button>
+				<input type="hidden" id="type" name="type" value="1"/>
+
+			</div>
+
+		</div>
+
+		<div class="row cl upload-url-div">
+
+			<label class="form-label col-2">课程视频：</label>
+
+			<div class="formControls col-10">
+
+				<input type="text" class="input-text" value="<{$value.vedio}>" name="vedio_url" >
+			</div>
+
+		</div>
+
+		<div class="row cl upload-file-div">
 
 			<label class="form-label col-2">课程视频：</label>
 
@@ -563,7 +587,7 @@
 			</div>
 
 		</div>
-		<div class="row cl">
+		<div class="row cl upload-file-div">
 
 			<label class="form-label col-2"></label>
 
@@ -654,6 +678,27 @@
 
 
 <script language="JavaScript">
+	function check_upload(type){
+		if(type == 1){
+			$("#upload_file_1").addClass('btn-primary')
+			$("#upload_url_1").removeClass('btn-primary')
+			$(".upload-file-div").show();
+			$(".upload-url-div").hide();
+			$("#type").val(1);
+		}else{
+			$("#upload_url_1").addClass('btn-primary')
+			$("#upload_file_1").removeClass('btn-primary')
+			$(".upload-file-div").hide();
+			$(".upload-url-div").show();
+			$("#type").(2);
+		}val
+	}
+
+	$(function(){
+		$(".upload-file-div").show();
+		$(".upload-url-div").hide();
+	})
+
 	$('#json').on('input propertychange',function(){
     console.log($(this).val());
 		$("input[name=json]").val($(this).val());
