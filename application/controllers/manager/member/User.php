@@ -592,10 +592,14 @@ class User extends CI_Controller
             }
             //修改数据
             $this->db->trans_start();
-            $res = $this->loop_model->update_id('order', $update_data, ['id'=>$data_post['id']]);
-            if (!empty($res) ) {
+            $res = $this->loop_model->update_where('order', $update_data, ['id'=>$data_post['id']]);
+            if ($res >=0 ) {
+                $update_data['rakeimg'] = $data_post['rakeimg'];
+                if($update_data['rake_id'] == 1 && $res > 0){
+                    $update_data['ratetime'] = time();
+                }
                 $res1 = $this->loop_model->update_where('order_rake', $update_data, ['order_id'=>$data_post['id']]);
-                if (!empty($res) ) {
+                if ($res >=0 ) {
                     $this->db->trans_commit();
                     error_json('y');
                 }else{

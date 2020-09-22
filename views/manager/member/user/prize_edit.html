@@ -62,6 +62,19 @@
 			</div>
         </div>
 
+        <div class="row cl desc_content" id="desc_content1">
+            <label class="form-label col-2">凭证图片：</label>
+            <div class="formControls col-9">
+                <{if $rate.rakeimg}>
+                <a href="<{$rate.rakeimg}>" target="_blank"><img src="<{$rate.rakeimg}>" width="50" <{if $rate.rakeimg==''}>style="display: none;"<{/if}>></a>
+                <{else}>
+                <a href="" target="_blank"><img src="" width="50" style="display: none;"></a>
+                <{/if}>
+                <input type="hidden" value="<{if $rate.rakeimg}><{$rate.rakeimg}><{/if}>" name="rakeimg">
+                <input type="file" name="desc_1_pic" id="desc_1_pic" onchange="upload_file(this);" style="width: 150px;">
+            </div>
+        </div>
+
         <div class="row cl">
             <div class="col-10 col-offset-2">
                 <input type="hidden" name="id" value="<{$detail.id}>">
@@ -107,17 +120,14 @@
         var formObj = new Form();
         formObj.init(<{ch_json_encode($item)}>);
 
-        	//商品图片回填
-
-		<{if $detail.image_list!=''}>
-
-        var html = template('goods_picTemplate',<{ch_json_encode($item.image_list)}>);
-
-        $('#goods_list_pic').append(html);
-
-        <{/if}>
-
     })
+    //添加图片展示
+    function show_upload(spec_pic, url){console.log(spec_pic);console.log(url);
+        $("#"+spec_pic).parent().find('img').attr('src',url);
+        $("#"+spec_pic).parent().find('img').show();
+        $("#"+spec_pic).parent().find('a').attr('href',url);
+        $("#"+spec_pic).parent().find('[type="hidden"]').val(url);
+    }
 </script>
 </body>
 </html>
