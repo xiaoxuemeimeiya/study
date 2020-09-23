@@ -27,7 +27,7 @@ class Goods_model extends CI_Model
             if ($goods_data['status'] != 0) return false; //msg('商品已下架');
             $goods_data['market_price'] = format_price($goods_data['market_price']);
             $goods_data['sell_price']   = format_price($goods_data['sell_price']);
-            $goods_data['endtime']   = $goods_data['endtime'] ? date("Y-m-d H;i:s",$goods_data['endtime']) : '';
+            $goods_data['endtime']   = $goods_data['time'] ? $goods_data['time'].'个月' : '终身';
             //商品描述
             $desc               = $this->loop_model->get_where('goods_desc', array('goods_id' => $id), 'desc');
             $goods_data['desc'] = $desc['desc'];
@@ -212,7 +212,7 @@ class Goods_model extends CI_Model
 
         $update_data = array(
             'name'         => $data_post['name'],
-            'sub_desc'         => $data_post['sub_desc'],
+            'sub_desc'     => $data_post['sub_desc'],
             'model_id'     => (int)$data_post['model_id'],
             'cat_id'       => (int)$data_post['cat_id'],
             'sell_price'   => price_format(min($data_post['sell_price'])),
@@ -222,7 +222,7 @@ class Goods_model extends CI_Model
             'sortnum'      => (int)$data_post['sortnum'],
             'vedio'        => $data_post['type']==1 ? $data_post['vedio'] :$data_post['vedio_url'],
             'edittime'     => time(),
-            'endtime'     => strtotime($data_post['endtime']),
+            'time'         => $data_post['time'],
             'json'         => $data_post['json'],
         );
 

@@ -140,6 +140,7 @@ class Invite extends MY_Controller
         $page <= 1 ? $page = 1 : $page = $page;//当前页数
         //搜索条件start
         //状态
+        /*
         $status = $this->input->get_post('status');
         if ($status == 1) {
             //待支付的
@@ -151,6 +152,8 @@ class Invite extends MY_Controller
         } elseif ($status != '') {
             $where_data['where']['status'] = $status;
         }
+        */
+        $where_data['where_in']['o.status'] = [2,3,4,5];
         //分享者id
         $where_data['where']['o.share_uid'] = $m_id;
 
