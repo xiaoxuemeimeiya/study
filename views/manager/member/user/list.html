@@ -35,6 +35,8 @@
 				<th width="50">余额</th>
 				<th width="50">积分</th>
 				<th width="80">注册时间</th>
+				<th width="100">邀请人昵称</th>
+				<th width="80">邀请人头像</th>
 				<th width="110">操作</th>
 			</tr>
 			</thead>
@@ -50,6 +52,8 @@
 				<td class="text-l" onClick="open_iframe('现金流水','<{site_url("/manager/member/user/account_log/<{$key.id}>")}>','100%')">￥<{$key.balance}></td>
 				<td class="text-l" onClick="open_iframe('积分流水','<{site_url("/manager/member/user/point_log/<{$key.id}>")}>','100%')">0</td>
 				<td><{date('Y-m-d',$key.scribe_time)}></td>
+				<td class="text-l"><{$key.top_nickname}></td>
+				<td><img style="width:40px;height:40px;border-radius:40px" src="<{$key.top_headimgurl}>" /></td>
 				<td class="f-14 td-manage">
 				</td>
 			</tr>
