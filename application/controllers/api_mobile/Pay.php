@@ -116,7 +116,7 @@ class Pay extends CI_Controller
         $input->SetBody($pay_data["order_body"]);
         $input->SetAttach("");
         $input->SetOut_trade_no($pay_data['order_no']);
-        $input->SetTotal_fee($pay_data['order_price']);
+        $input->SetTotal_fee($pay_data['order_price']/100);
         $input->SetTime_start(date("YmdHis"));
         $input->SetTime_expire(date("YmdHis", time() + 600));
         $input->SetGoods_tag($pay_data["order_body"]);
