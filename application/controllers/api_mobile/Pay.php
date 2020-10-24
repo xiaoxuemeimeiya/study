@@ -86,7 +86,7 @@ class Pay extends CI_Controller
             $this->ResArr['msg'] = '参数缺失';
             echo json_encode($this->ResArr);exit;
         }
-        $order_price  = 0;
+        //$order_price  = 0;
         $order_data = $this->loop_model->get_where('order', array('order_no' => $order_no, 'status' => 1));
         if (!empty($order_data)) {
             $order_no_data = $order_no;
