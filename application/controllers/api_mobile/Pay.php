@@ -86,7 +86,7 @@ class Pay extends CI_Controller
             $this->ResArr['msg'] = '参数缺失';
             echo json_encode($this->ResArr);exit;
         }
-        //$order_price  = 0;
+        $order_price  = 0;
         $order_data = $this->loop_model->get_where('order', array('order_no' => $order_no, 'status' => 1));
         if (!empty($order_data)) {
             $order_no_data = $order_no;
@@ -100,7 +100,7 @@ class Pay extends CI_Controller
         $pay_data = array(
             'order_body'  => '订单支付',
             'order_no'    => $order_no,//支付单号
-            'order_price' => $order_price > 0 ? $order_price : 1 ,//支付金额
+            'order_price' => $order_price > 0 ? $order_price : 1000 ,//支付金额
             'payment_id'  => $payment_id,//支付方式
         );
         $user = $this->loop_model->get_where('user',array('id'=>$order_data['m_id']));
