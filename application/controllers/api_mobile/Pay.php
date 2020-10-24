@@ -90,7 +90,7 @@ class Pay extends CI_Controller
         $order_data = $this->loop_model->get_where('order', array('order_no' => $order_no, 'status' => 1));
         if (!empty($order_data)) {
             $order_no_data = $order_no;
-            $order_price     = $order_price + $order_data['real_price'];//支付金额
+            $order_price     = $order_price + $order_data['order_price'];//支付金额
         } else {
             $this->ResArr['code'] = 101;
             $this->ResArr['msg'] = '订单信息错误,或者订单已支付';
