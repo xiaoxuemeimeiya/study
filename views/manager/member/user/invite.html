@@ -81,13 +81,13 @@
 				<td class="text-c">
 					<{if $key.status== null}>
 					<span class="label label-warning radius">待领卡</span>
-					<{elseif $key.status==0}>
-					<span class="label label-warning radius">待激活</span>
 					<{elseif $key.status==1}>
-					<span class="label label-success radius">已激活</span>
+					<span class="label label-warning radius">待激活</span>
 					<{elseif $key.status==2}>
-					<span class="label label-success radius">激活失败</span>
+					<span class="label label-success radius">已激活</span>
 					<{elseif $key.status==3}>
+					<span class="label label-grey radius">审核失败</span>
+					<{elseif $key.status==4}>
 					<span class="label label-grey radius">已过期</span>
 					<{else}>
 					<span class="label label-warning radius">待领取</span>
