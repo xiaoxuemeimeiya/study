@@ -34,10 +34,11 @@ class User extends CI_Controller
         assign('search_where', $search_where);
         //搜索条件end
        // $where_data['select'] = 'u.id,u.nickname,u.headimgurl,u.balance,u.scribe_time,m.phone,';
-        $where_data['select'] = 'u.id,u.openid,u.nickname,u.headimgurl,u.balance,u.scribe_time,m.phone,k.nickname as top_nickname,k.headimgurl as top_headimgurl';
+        $where_data['select'] = 'u.id,u.openid,u.nickname,u.headimgurl,u.balance,u.scribe_time,m.phone,k.nickname as top_nickname,k.headimgurl as top_headimgurl,f.position';
         $where_data['join']         = array(
             array('phone as m', 'm.m_id=u.id','left'),
-            array('user as k', 'u.top_id=k.id','left')
+            array('user as k', 'u.top_id=k.id','left'),
+            array('card as f', 'u.id=f.m_id','left')
         );
         //查到数据
         $list_data = $this->loop_model->get_list('user as u', $where_data, $pagesize, $pagesize * ($page - 1), 'u.id desc');//列表
