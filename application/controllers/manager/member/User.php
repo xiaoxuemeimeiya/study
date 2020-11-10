@@ -34,7 +34,7 @@ class User extends CI_Controller
         assign('search_where', $search_where);
         //搜索条件end
        // $where_data['select'] = 'u.id,u.nickname,u.headimgurl,u.balance,u.scribe_time,m.phone,';
-        $where_data['select'] = 'u.id,u.openid,u.nickname,u.headimgurl,u.balance,u.scribe_time,m.phone,k.nickname as top_nickname,k.headimgurl as top_headimgurl,f.position';
+        $where_data['select'] = 'u.id,u.openid,u.nickname,u.headimgurl,u.balance,u.scribe_time,m.phone,k.nickname as top_nickname,k.headimgurl as top_headimgurl,f.position,f.name,f.mobile';
         $where_data['join']         = array(
             array('phone as m', 'm.m_id=u.id','left'),
             array('user as k', 'u.top_id=k.id','left'),

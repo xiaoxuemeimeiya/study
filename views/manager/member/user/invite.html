@@ -74,7 +74,7 @@
 				<td><input name="id[]" type="checkbox" value="<{$key.id}>"></td>
 				<td><{$key.id}></td>
 				<td class="text-l"><{$key.name}></td>
-				<td class="text-l"><{$key.position}></td>
+				<td class="text-l"><{if $key.position == 1}> 学生<{elseif $key.position == 2}>家长<{elseif $key.position == 3}>老师<{elseif $key.position == 4}>其他<{/if}></td>
 				<td class="text-l"><{$key.mobile}></td>
 				<td class="text-l"><{$key.username}></td>
 				<td class="text-l"><{$key.password}></td>
