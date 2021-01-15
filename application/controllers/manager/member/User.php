@@ -493,7 +493,7 @@ class User extends CI_Controller
          $where_data['where']['o.share_uid'] = $m_id;
  
          //搜索条件end
-         $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,o.addtime,o.paytime,m.nickname,k.name,f.rate,f.rake_id,convert(f.order_price/10000,decimal(10,2)) as order_price,convert(f.rake_price/10000,decimal(10,2)) as rake_price';
+         $where_data['select'] = 'o.id,o.order_no,o.payment_status,o.status,o.addtime,o.paytime,m.nickname,m.headimgurl,k.name,f.rate,f.rake_id,convert(f.order_price/10000,decimal(10,2)) as order_price,convert(f.rake_price/10000,decimal(10,2)) as rake_price';
          $where_data['join']   = array(
              array('user as m', 'o.m_id=m.id'),
              array('goods as k', 'o.good_id=k.id'),
@@ -554,12 +554,15 @@ class User extends CI_Controller
     public function invite_group_edit($id)
     {
         $where['id'] = $id;
+        $pagesize = 20;//分页大小
+        $page     = (int)$this->input->get_post('per_page');
+        $page <= 1 ? $page = 1 : $page = $page;//当前页数
         $select_data['select'] = 'a.id,a.name,a.position,a.mobile,a.username,a.password,a.sendtime,a.endtime,a.status,a.addtime,b.nickname,b.headimgurl';
         $card = $this->loop_model->get_where('card',$where);
         $where_data['join']   = array(
             array('user b', 'a.m_id=b.id'),
         );
-        $where_data['where']['b.top_id'] = $m_id;
+        $where_data['where']['b.top_id'] = $id;
         $card = $this->loop_model->get_list('card a',$where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc');
         assign('list', $card);
         display('/member/user/invite.html');
@@ -616,5 +619,42 @@ class User extends CI_Controller
         } else {
             error_json('提交方式错误');
         }
+    }
+
+    //返佣列表
+    public function rate(){
+        //自动执行start********************************************
+        //$m_id     = (int)$this->input->get_post('m_id');
+        $this->load->model('order/order_model');
+        $this->order_model->auto_cancel();//自动取消超时的订单
+        $this->order_model->auto_confirm();//自动确认超时的订单
+        //自动执行end**********************************************
+
+        $pagesize = 20;//分页大小
+        $page     = (int)$this->input->get_post('per_page');
+        $page <= 1 ? $page = 1 : $page = $page;//当前页数
+        //搜索条件start
+        //状态
+        $where_data['where']['o.payment_status'] = 1;//已经支付
+        $where_data['where_in']['o.status'] = [2,3,4,5];
+        //分享者id
+        //$where_data['where']['o.share_uid'] = $m_id;
+
+        //搜索条件end
+        $where_data['select'] = 'gg.name as top_name,o.id,o.order_no,o.payment_status,o.status,o.addtime,o.paytime,m.nickname,m.headimgurl,k.name,f.rate,f.rake_id,convert(f.order_price/10000,decimal(10,2)) as order_price,convert(f.rake_price/10000,decimal(10,2)) as rake_price,g.phone';
+        $where_data['join']   = array(
+            array('user as m', 'o.m_id=m.id'),
+            array('goods as k', 'o.good_id=k.id'),
+            array('order_rake as f', 'o.id=f.order_id'),
+            array('phone as g', 'g.m_id=m.id'),
+            array('user as gg', 'gg.id=o.share_uid'),
+        );
+        //查到数据
+        $order_list = $this->loop_model->get_list('order as o', $where_data, $pagesize, $pagesize * ($page - 1), 'o.id desc');//列表
+        assign('list', $order_list);
+        //开始分页start
+        $all_rows = $this->loop_model->get_list_num('order as o', $where_data);//所有数量
+        assign('page_count', ceil($all_rows / $pagesize));
+        display('/member/user/rate.html');
     }
 }
