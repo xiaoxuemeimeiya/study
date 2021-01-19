@@ -641,7 +641,7 @@ class User extends CI_Controller
         //$where_data['where']['o.share_uid'] = $m_id;
 
         //搜索条件end
-        $where_data['select'] = 'gg.name as top_name,o.id,o.order_no,o.payment_status,o.status,o.addtime,o.paytime,m.nickname,m.headimgurl,k.name,f.rate,f.rake_id,convert(f.order_price/10000,decimal(10,2)) as order_price,convert(f.rake_price/10000,decimal(10,2)) as rake_price,g.phone';
+        $where_data['select'] = 'gg.nickname as top_nickname,gg.headimgurl as top_headimgurl,o.id,o.order_no,o.payment_status,o.status,o.addtime,o.paytime,m.nickname,m.headimgurl,k.name,f.rate,f.rake_id,convert(f.order_price/10000,decimal(10,2)) as order_price,convert(f.rake_price/10000,decimal(10,2)) as rake_price,g.phone';
         $where_data['join']   = array(
             array('user as m', 'o.m_id=m.id'),
             array('goods as k', 'o.good_id=k.id'),
@@ -651,10 +651,131 @@ class User extends CI_Controller
         );
         //查到数据
         $order_list = $this->loop_model->get_list('order as o', $where_data, $pagesize, $pagesize * ($page - 1), 'o.id desc');//列表
+        var_dump($order_list);
         assign('list', $order_list);
         //开始分页start
         $all_rows = $this->loop_model->get_list_num('order as o', $where_data);//所有数量
         assign('page_count', ceil($all_rows / $pagesize));
         display('/member/user/rate.html');
     }
+
+    //批量返现
+    public function reback_batch(){
+        $id = $this->input->post('id', true);
+        if (empty($id)) error_json('id错误');
+        $this->load->library('minipay/WxPayApi');
+        $this->load->library('minipay/WxPayJsApiPay');
+        $this->load->library('minipay/WxPayConfig');
+        $this->load->library('minipay/JsApiPay');
+        foreach($id as $v){
+            //查看改订单是否满足未返现
+            $order = $this->loop_model->where('id', $v['id'])->where('rake_id',0)->find();//未支付订单
+            if(!$order){
+
+            }
+            //查看该用户是否存在
+            $user = $this->loop_model->get_where('user',array('id'=>$order['m_id']));
+            if($user){
+
+            }
+            $openid = $user['openid'];
+            $this->db->trans_start();
+            $update_data['rake_id'] = 1;//已返佣
+            $res = $this->loop_model->update_where('order', $update_data, ['id'=>$v['id']]);
+            if ($res >=0 ) {
+                if($update_data['rake_id'] == 1 && $res > 0){
+                    $update_data['ratetime'] = time();
+                }
+                $res1 = $this->loop_model->update_where('order_rake', $update_data, ['order_id'=>$v['id']]);
+                if ($res >=0 ) {
+                    $this->db->trans_commit();
+                    error_json('y');
+                }else{
+                    $this->db->trans_rollback();
+                    error_json('保存失败');
+                }
+
+            } else {
+                $this->db->trans_rollback();
+                error_json('保存失败');
+            }
+        }
+    }
+
+    //审核提现
+    public function ajaxcheck(){
+        $postData = $this->request->post();
+        if(!isset($postData['type']) || empty($postData)){
+            $this->ResArr["code"] = "3";
+            $this->ResArr["msg"] = "参数缺失！";
+        }
+        if($postData['type'] == 2){
+            //审核成功
+            $datainfo =  Db::table('add_cash')->where('id',$postData['id'])->find();
+            if(!$datainfo){
+                $this->ResArr["code"] = "3";
+                $this->ResArr["msg"] = "该提现记录不存在！";
+                return json($this->ResArr);
+            }
+            if($datainfo["cash"] <= 0){
+                $this->ResArr["code"] = "3";
+                $this->ResArr["msg"] = "提现金额错误！";
+                return json($this->ResArr);
+            }
+            $userinfo = WeUser::where('id',$datainfo['uid'])->find();
+            if(!$userinfo){
+                $this->ResArr["code"] = "3";
+                $this->ResArr["msg"] = "用户不存在！";
+                return json($this->ResArr);
+            }
+            $openid = $userinfo['openid'];
+            //$total_fee = $info['cash']*100;
+            $total_fee = $datainfo["cash"]*100;
+            require_once Env::get('ROOT_PATH').'extend/wepay3.0.9/WxPay.Api.php';
+            require_once Env::get('ROOT_PATH').'extend/wepay3.0.9/WxPay.JsApiPay.php';
+            require_once Env::get('ROOT_PATH').'extend/wepay3.0.9/WxPay.Config.php';
+            $partner_trade_no = time().getRandChar(18);
+            $input = new \WxPayBizCash();
+            $input->SetPartner_trade_no($partner_trade_no);
+            $input->SetDesc('cash');
+            $input->SetAmount($total_fee);
+            $input->SetCheck_name('NO_CHECK');
+            $input->SetOpenid($openid);
+            $config = new \WxPayConfig();
+            $order = \WxPayApi::transfers($config,$input);
+            if($order["return_code"]=="SUCCESS" && $order['result_code']=='SUCCESS'){
+                lyLog(var_export($order,true) , "refund" , true);
+                $UpdataWhere['id'] = $postData['id'];
+                $updateData['status'] = 2;//状态改为审核通过
+                $res = Db::table('add_cash')->where($UpdataWhere)->update($updateData);
+            }else if(($order['return_code']=='FAIL') || ($order['result_code']=='FAIL')){
+                //退款失败
+                //原因
+                $reason = (empty($order['err_code_des'])?$order['return_msg']:$order['err_code_des']);
+                $this->ResArr['code'] = "2";
+                $this->ResArr['msg'] = $reason;
+            }
+            else{
+                $this->ResArr['code'] = "2";
+                $this->ResArr['msg'] = "pay data error!";
+            }
+        }elseif($postData['type'] == 3){
+            //审核失败
+            $res = AddCash::where('id',$postData['id'])->update(['status'=>$postData['type']]);
+            if($res){
+                $this->ResArr["code"] = "0";
+                $this->ResArr["msg"] = "提交成功！";
+            }else{
+                $this->ResArr["code"] = "3";
+                $this->ResArr["msg"] = "提交失败！";
+            }
+        }else{
+            $this->ResArr["code"] = "3";
+            $this->ResArr["msg"] = "选择方式错误！";
+        }
+
+        return json($this->ResArr);
+    }
+
+    //单个返现
 }

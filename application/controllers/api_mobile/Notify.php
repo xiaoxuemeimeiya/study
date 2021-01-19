@@ -36,6 +36,7 @@ class Notify extends CI_Controller
                 $updateData['payment_no']           = $data['transaction_id'];
                 $updateData['paytime']              = time();
                 $updateData['status']               = 2;
+                $updateData['rake_id']              = 1;
                 $this->db->trans_start();
                 $res = $this->loop_model->update_where('order',$updateData,$UpdataWhere);
                 if($res < 1 ){
@@ -51,8 +52,14 @@ class Notify extends CI_Controller
                     'note'       => '',
                     'admin_user' =>  0
                 );
-                $res1 = $this->loop_model->insert('order_collection_doc',$collection_data);var_dump($res1);
-                if($res1 > 0){
+                $res1 = $this->loop_model->insert('order_collection_doc',$collection_data);
+                //插入记录
+                $cashdata['order_id'] = $checkRes['id'];
+                $cashdata['m_id'] = $checkRes['share_uid'];
+                $cashdata['type'] = 1;
+                $cashdata['addtime'] = time();
+                $cash = $this->loop_model->insert('cash',$cashdata);
+                if($res1 > 0 && $cash > 0){
                     $this->db->trans_commit();
                 }else{
                     $this->db->trans_rollback();
