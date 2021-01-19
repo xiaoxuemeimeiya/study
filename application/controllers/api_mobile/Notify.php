@@ -29,6 +29,7 @@ class Notify extends CI_Controller
             $UpdataWhere['status']      = 1;//生成订单
             //$checkRes = Db::table('order')->where($UpdataWhere)->find();//生成订单数据
             $checkRes = $this->loop_model->get_where('order',$UpdataWhere);
+            $rakeres = $this->loop_model->update_where('order_rake',['order_id'=>$checkRes['id'],'state'=>1]);
             if($checkRes){
                 //$openid = $checkRes['openid'];
                 $updateData['payment_id']           = 3;//微信支付
@@ -58,6 +59,7 @@ class Notify extends CI_Controller
                 $cashdata['m_id'] = $checkRes['share_uid'];
                 $cashdata['type'] = 1;
                 $cashdata['addtime'] = time();
+                $cashdata['date'] = date("Y-m-d",time());
                 $cash = $this->loop_model->insert('cash',$cashdata);
                 if($res1 > 0 && $cash > 0){
                     $this->db->trans_commit();

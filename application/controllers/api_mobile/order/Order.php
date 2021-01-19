@@ -195,8 +195,8 @@ class Order extends MY_Controller
                 $rakedata['share_order_id'] = $sameorder['id'];
                 $rakedata['order_id'] = $res;
                 $rakedata['rake_id'] = 0;
-                $rakedata['rake_price'] = $sameorder['order_price']*0.2;
-                $rakedata['order_price'] = $sameorder['order_price'];
+                $rakedata['rake_price'] = $order_data['sku_price_real']*0.2;
+                $rakedata['order_price'] = $order_data['sku_price_real'];
                 $rakedata['rate'] = 20;
                 $rakedata['addtime'] = time();
                 $rakeres = $this->loop_model->insert('order_rake',$rakedata);
@@ -206,8 +206,8 @@ class Order extends MY_Controller
                 $rakedata['share_order_id'] = $dissameorder['id'];
                 $rakedata['order_id'] = $res;
                 $rakedata['rake_id'] = 0;
-                $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
-                $rakedata['order_price'] = $dissameorder['order_price'];
+                $rakedata['rake_price'] = $order_data['sku_price_real']*0.05;
+                $rakedata['order_price'] = $order_data['sku_price_real'];
                 $rakedata['rate'] = 5;
                 $rakedata['addtime'] = time();
                 $rakeres = $this->loop_model->insert('order_rake',$rakedata);
@@ -218,8 +218,8 @@ class Order extends MY_Controller
                     $rakedata['share_order_id'] = $dissameorder['id'];
                     $rakedata['order_id'] = $res;
                     $rakedata['rake_id'] = 0;
-                    $rakedata['rake_price'] = $dissameorder['order_price']*0.05;
-                    $rakedata['order_price'] = $dissameorder['order_price'];
+                    $rakedata['rake_price'] = $order_data['sku_price_real']*0.05;
+                    $rakedata['order_price'] = $order_data['sku_price_real'];
                     $rakedata['rate'] = 5;
                     $rakedata['addtime'] = time();
                     $rakeres = $this->loop_model->insert('order_rake',$rakedata);

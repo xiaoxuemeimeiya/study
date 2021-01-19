@@ -623,6 +623,52 @@ class User extends CI_Controller
 
     //返佣列表
     public function rate(){
+        $pagesize = 20;//分页大小
+        $page     = (int)$this->input->get('per_page');
+        $page <= 1 ? $page = 1 : $page = $page;//当前页数
+        //搜索条件start
+        $status = $this->input->post_get('type');
+        if (isset($status) && $status != '') {
+            $where_data['where'] = array('u.type' => $status);
+        }
+        //搜索条件starttime,endtime
+        $starttime = $this->input->post_get('starttime');
+        $endtime = $this->input->post_get('endtime');
+        if (isset($starttime) && $starttime != '') {
+            $where_data['where'] = array('u.addtime >=' => $starttime);
+        }
+        if (isset($endtime) && $endtime != '') {
+            $where_data['where'] = array('u.addtime <=' => $endtime);
+        }
+
+        $username = $this->input->post_get('a.username');
+        if (!empty($username)) $where_data['where']['a.username'] = $username;
+        $search_where = array(
+            'status'   => $status,
+            'starttime' => $starttime,
+            'endtime' => $endtime,
+            'username' => $username,
+        );
+        assign('search_where', $search_where);
+        //搜索条件end
+        $where_data['join']         = array(
+            array('user as a', 'u.m_id=a.id'),
+            array('order_rake as k', 'k.order_id=u.order_id'),
+            array('order as o', 'k.order_id=o.id'),
+            array('user as b', 'o.m_id=b.id')
+        );
+        $where_data['select'] = 'a.nickname as top_nickname,a.headimgurl as top_headimgurl,u.*,k.*,b.nickname,b.headimgurl';
+        //查到数据
+        $list_data = $this->loop_model->get_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc');//列表
+        var_dump($list_data);
+        assign('list', $list_data);
+        //开始分页start
+        $all_rows = $this->loop_model->get_list_num('cash as u', $where_data);//所有数量
+        assign('page_count', ceil($all_rows / $pagesize));
+        display('/member/user/rate.html');
+    }
+    /*
+    public function rate(){
         //自动执行start********************************************
         //$m_id     = (int)$this->input->get_post('m_id');
         $this->load->model('order/order_model');
@@ -658,6 +704,7 @@ class User extends CI_Controller
         assign('page_count', ceil($all_rows / $pagesize));
         display('/member/user/rate.html');
     }
+    */
 
     //批量返现
     public function reback_batch(){
