@@ -29,7 +29,7 @@ class Notify extends CI_Controller
             $UpdataWhere['status']      = 1;//生成订单
             //$checkRes = Db::table('order')->where($UpdataWhere)->find();//生成订单数据
             $checkRes = $this->loop_model->get_where('order',$UpdataWhere);
-            $rakeres = $this->loop_model->ger_where('order_rake',['order_id'=>$checkRes['id'],'state'=>0]);
+            $rakeres = $this->loop_model->get_where('order_rake',['order_id'=>$checkRes['id'],'state'=>0]);
             //$rakeres = $this->loop_model->update_where('order_rake',['order_id'=>$checkRes['id'],'state'=>1]);
             if($checkRes){
                 //$openid = $checkRes['openid'];
