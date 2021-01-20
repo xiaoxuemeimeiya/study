@@ -740,10 +740,8 @@ class User extends CI_Controller
 
         $where_data['join']         = array(
             array('user as a', 'u.m_id=a.id'),
-            array('order_rake as k', 'k.order_id=u.order_id'),
-            array('order as o', 'k.order_id=o.id'),
         );
-        $where_data['select'] = 'sum(k.rake_price) as rake_price,sum(k.order_price) as order_price,a.nickname as top_nickname,a.headimgurl as top_headimgurl,u.*,o.payment_status';
+        $where_data['select'] = 'a.nickname as nickname,a.headimgurl as headimgurl,u.*';
         //查到数据
         $list_data = $this->loop_model->get_group_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc','u.m_id,u.date');//列表
 
@@ -876,28 +874,36 @@ class User extends CI_Controller
 
     public function day_rate_log(){
         //搜索条件start
-        $where_data['where'] = array('u.type' => 2);
-        $where_data['where'] = array('u.state' => 0);
+        $where_data['where'] = array('type' => 2);
+        $where_data['where'] = array('state' => 0);
+        $where_data['date'] = date("Y-m-d",time());
         //判断时间（每晚10-10：30执行）
         $starttime = date("Y-m-d",time())+22*60*60;
         $endtime = date("Y-m-d",time())+22*60*60+30*60;
+
         if(time() >= $starttime && time() <=$endtime ){
             //执行
-        }
-        //搜索条件end
+            $where_data['select'] = 'sum(cash) as cash,m_id,date';
 
-        $where_data['join']         = array(
-            array('user as a', 'u.m_id=a.id'),
-            array('order_rake as k', 'k.order_id=u.order_id'),
-        );
-        $where_data['select'] = 'sum(k.rake_price) as rake_price,sum(k.order_price) as order_price,a.nickname as top_nickname,a.headimgurl as top_headimgurl,u.*,o.payment_status';
-        //查到数据
-        $list_data = $this->loop_model->get_group_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc','u.m_id,u.date');//列表
-        assign('list', $list_data);
-        //开始分页start
-        $all_rows = $this->loop_model->get_list_num('cash as u', $where_data);//所有数量
-        assign('page_count', ceil($all_rows / $pagesize));
-        display('/member/user/day_rate.html');
+            //查到数据
+            $list_data = $this->loop_model->get_group_list('cash', $where_data,'', '', 'id desc','m_id,date');//列表
+            foreach($list_data as $v){
+                //根据date查找
+                $date = date("Y-m-d",time());
+                $res1 = $this->loop_model->update_where('cash', ['state'=>1],['date'=>$date,'type'=>1] );
+                //生成提现记录
+                $insertdate['m_id'] = $v['m_id'];
+                $insertdate['type'] = 2;//提现
+                $insertdate['addtime'] = time();
+                $insertdate['date'] = $v['date'];
+                $insertdate['cash'] = $v['cash'];
+
+                $this->loop_model->insert('cash',$insertdate );
+            }
+            var_dump($list_data);
+        }
+
+
     }
 
     //单个返现

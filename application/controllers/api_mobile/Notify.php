@@ -40,7 +40,7 @@ class Notify extends CI_Controller
                 $updateData['status']               = 2;
                 if($rakeres){
                     $updateData['rake_id']              = 1;
-                    $this->loop_model->update_where('order_rake',['order_id'=>$checkRes['id'],'state'=>1]);
+                    $this->loop_model->update_where('order_rake',['state'=>1],['order_id'=>$checkRes['id']]);
                 }
                 $this->db->trans_start();
                 $res = $this->loop_model->update_where('order',$updateData,$UpdataWhere);
