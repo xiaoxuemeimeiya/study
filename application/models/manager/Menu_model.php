@@ -39,6 +39,7 @@ class Menu_model extends CI_Model
                     '用户基本信息管理' => '/manager/member/user/index',
                     '用户数据管理' => '/manager/member/user/data',
                     '用户返现管理' => '/manager/member/user/rate',
+                    '日返现管理' => '/manager/member/user/day_rate',
                 ),
             ),
             'tool' => array(

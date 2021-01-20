@@ -33,7 +33,7 @@ class User extends CI_Controller
         );
         assign('search_where', $search_where);
         //搜索条件end
-       // $where_data['select'] = 'u.id,u.nickname,u.headimgurl,u.balance,u.scribe_time,m.phone,';
+       //$where_data['select'] = 'u.id,u.nickname,u.headimgurl,u.balance,u.scribe_time,m.phone,';
         $where_data['select'] = 'u.id,u.openid,u.nickname,u.headimgurl,u.balance,u.scribe_time,m.phone,k.nickname as top_nickname,k.headimgurl as top_headimgurl,f.position,f.name,f.mobile';
         $where_data['join']         = array(
             array('phone as m', 'm.m_id=u.id','left'),
@@ -657,54 +657,102 @@ class User extends CI_Controller
             array('order as o', 'k.order_id=o.id'),
             array('user as b', 'o.m_id=b.id')
         );
-        $where_data['select'] = 'a.nickname as top_nickname,a.headimgurl as top_headimgurl,u.*,k.*,b.nickname,b.headimgurl';
+        $where_data['select'] = 'a.nickname as top_nickname,a.headimgurl as top_headimgurl,u.*,k.*,o.payment_status,b.nickname,b.headimgurl';
         //查到数据
-        $list_data = $this->loop_model->get_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc');//列表
-        var_dump($list_data);
+        $list_data = $this->loop_model->get_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc','');//列表
         assign('list', $list_data);
         //开始分页start
         $all_rows = $this->loop_model->get_list_num('cash as u', $where_data);//所有数量
         assign('page_count', ceil($all_rows / $pagesize));
         display('/member/user/rate.html');
     }
-    /*
-    public function rate(){
-        //自动执行start********************************************
-        //$m_id     = (int)$this->input->get_post('m_id');
-        $this->load->model('order/order_model');
-        $this->order_model->auto_cancel();//自动取消超时的订单
-        $this->order_model->auto_confirm();//自动确认超时的订单
-        //自动执行end**********************************************
-
+/*
+    public function day_rate(){
         $pagesize = 20;//分页大小
-        $page     = (int)$this->input->get_post('per_page');
+        $page     = (int)$this->input->get('per_page');
         $page <= 1 ? $page = 1 : $page = $page;//当前页数
         //搜索条件start
-        //状态
-        $where_data['where']['o.payment_status'] = 1;//已经支付
-        $where_data['where_in']['o.status'] = [2,3,4,5];
-        //分享者id
-        //$where_data['where']['o.share_uid'] = $m_id;
+        $status = $this->input->post_get('type');
+        if (isset($status) && $status != '') {
+            $where_data['where'] = array('u.type' => $status);
+        }
+        //搜索条件starttime,endtime
+        $starttime = $this->input->post_get('starttime');
+        $endtime = $this->input->post_get('endtime');
+        if (isset($starttime) && $starttime != '') {
+            $where_data['where'] = array('u.addtime >=' => $starttime);
+        }
+        if (isset($endtime) && $endtime != '') {
+            $where_data['where'] = array('u.addtime <=' => $endtime);
+        }
 
-        //搜索条件end
-        $where_data['select'] = 'gg.nickname as top_nickname,gg.headimgurl as top_headimgurl,o.id,o.order_no,o.payment_status,o.status,o.addtime,o.paytime,m.nickname,m.headimgurl,k.name,f.rate,f.rake_id,convert(f.order_price/10000,decimal(10,2)) as order_price,convert(f.rake_price/10000,decimal(10,2)) as rake_price,g.phone';
-        $where_data['join']   = array(
-            array('user as m', 'o.m_id=m.id'),
-            array('goods as k', 'o.good_id=k.id'),
-            array('order_rake as f', 'o.id=f.order_id'),
-            array('phone as g', 'g.m_id=m.id'),
-            array('user as gg', 'gg.id=o.share_uid'),
+        $username = $this->input->post_get('a.username');
+        if (!empty($username)) $where_data['where']['a.username'] = $username;
+        $search_where = array(
+            'status'   => $status,
+            'starttime' => $starttime,
+            'endtime' => $endtime,
+            'username' => $username,
         );
+        assign('search_where', $search_where);
+        //搜索条件end
+
+        $where_data['join']         = array(
+            array('user as a', 'u.m_id=a.id'),
+            array('order_rake as k', 'k.order_id=u.order_id'),
+            array('order as o', 'k.order_id=o.id'),
+        );
+        $where_data['select'] = 'sum(k.rake_price) as rake_price,sum(k.order_price) as order_price,a.nickname as top_nickname,a.headimgurl as top_headimgurl,u.*,o.payment_status';
         //查到数据
-        $order_list = $this->loop_model->get_list('order as o', $where_data, $pagesize, $pagesize * ($page - 1), 'o.id desc');//列表
-        var_dump($order_list);
-        assign('list', $order_list);
+        $list_data = $this->loop_model->get_group_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc','u.m_id,u.date');//列表
+        assign('list', $list_data);
         //开始分页start
-        $all_rows = $this->loop_model->get_list_num('order as o', $where_data);//所有数量
+        $all_rows = $this->loop_model->get_list_num('cash as u', $where_data);//所有数量
         assign('page_count', ceil($all_rows / $pagesize));
-        display('/member/user/rate.html');
+        display('/member/user/day_rate.html');
     }
-    */
+*/
+    public function day_rate(){
+        $pagesize = 20;//分页大小
+        $page     = (int)$this->input->get('per_page');
+        $page <= 1 ? $page = 1 : $page = $page;//当前页数
+        //搜索条件start
+        $status = $this->input->post_get('type');
+        if (isset($status) && $status != '') {
+            $where_data['where'] = array('u.type' => $status);
+        }
+        //搜索条件starttime,endtime
+        $time = $this->input->post_get('time');
+        if (isset($starttime) && $starttime != '') {
+            $where_data['where'] = array('u.date' => $time);
+        }
+
+        $username = $this->input->post_get('a.username');
+        if (!empty($username)) $where_data['where']['a.username'] = $username;
+        $search_where = array(
+            'status'   => $status,
+            'time' => $time,
+            'username' => $username,
+        );
+        assign('search_where', $search_where);
+        //搜索条件end
+        $where_data['where'] = array('u.type' => 2);
+
+        $where_data['join']         = array(
+            array('user as a', 'u.m_id=a.id'),
+            array('order_rake as k', 'k.order_id=u.order_id'),
+            array('order as o', 'k.order_id=o.id'),
+        );
+        $where_data['select'] = 'sum(k.rake_price) as rake_price,sum(k.order_price) as order_price,a.nickname as top_nickname,a.headimgurl as top_headimgurl,u.*,o.payment_status';
+        //查到数据
+        $list_data = $this->loop_model->get_group_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc','u.m_id,u.date');//列表
+
+        assign('list', $list_data);
+        //开始分页start
+        $all_rows = $this->loop_model->get_list_num('cash as u', $where_data);//所有数量
+        assign('page_count', ceil($all_rows / $pagesize));
+        display('/member/user/day_rate.html');
+    }
 
     //批量返现
     public function reback_batch(){
@@ -718,11 +766,13 @@ class User extends CI_Controller
             //查看改订单是否满足未返现
             $order = $this->loop_model->where('id', $v['id'])->where('rake_id',0)->find();//未支付订单
             if(!$order){
+                //记录
 
             }
             //查看该用户是否存在
             $user = $this->loop_model->get_where('user',array('id'=>$order['m_id']));
             if($user){
+                //记录
 
             }
             $openid = $user['openid'];
@@ -822,6 +872,32 @@ class User extends CI_Controller
         }
 
         return json($this->ResArr);
+    }
+
+    public function day_rate_log(){
+        //搜索条件start
+        $where_data['where'] = array('u.type' => 2);
+        $where_data['where'] = array('u.state' => 0);
+        //判断时间（每晚10-10：30执行）
+        $starttime = date("Y-m-d",time())+22*60*60;
+        $endtime = date("Y-m-d",time())+22*60*60+30*60;
+        if(time() >= $starttime && time() <=$endtime ){
+            //执行
+        }
+        //搜索条件end
+
+        $where_data['join']         = array(
+            array('user as a', 'u.m_id=a.id'),
+            array('order_rake as k', 'k.order_id=u.order_id'),
+        );
+        $where_data['select'] = 'sum(k.rake_price) as rake_price,sum(k.order_price) as order_price,a.nickname as top_nickname,a.headimgurl as top_headimgurl,u.*,o.payment_status';
+        //查到数据
+        $list_data = $this->loop_model->get_group_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc','u.m_id,u.date');//列表
+        assign('list', $list_data);
+        //开始分页start
+        $all_rows = $this->loop_model->get_list_num('cash as u', $where_data);//所有数量
+        assign('page_count', ceil($all_rows / $pagesize));
+        display('/member/user/day_rate.html');
     }
 
     //单个返现

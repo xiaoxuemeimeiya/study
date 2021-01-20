@@ -29,7 +29,8 @@ class Notify extends CI_Controller
             $UpdataWhere['status']      = 1;//生成订单
             //$checkRes = Db::table('order')->where($UpdataWhere)->find();//生成订单数据
             $checkRes = $this->loop_model->get_where('order',$UpdataWhere);
-            $rakeres = $this->loop_model->update_where('order_rake',['order_id'=>$checkRes['id'],'state'=>1]);
+            $rakeres = $this->loop_model->ger_where('order_rake',['order_id'=>$checkRes['id'],'state'=>0]);
+            //$rakeres = $this->loop_model->update_where('order_rake',['order_id'=>$checkRes['id'],'state'=>1]);
             if($checkRes){
                 //$openid = $checkRes['openid'];
                 $updateData['payment_id']           = 3;//微信支付
@@ -37,7 +38,10 @@ class Notify extends CI_Controller
                 $updateData['payment_no']           = $data['transaction_id'];
                 $updateData['paytime']              = time();
                 $updateData['status']               = 2;
-                $updateData['rake_id']              = 1;
+                if($rakeres){
+                    $updateData['rake_id']              = 1;
+                    $this->loop_model->update_where('order_rake',['order_id'=>$checkRes['id'],'state'=>1]);
+                }
                 $this->db->trans_start();
                 $res = $this->loop_model->update_where('order',$updateData,$UpdataWhere);
                 if($res < 1 ){
@@ -55,12 +59,16 @@ class Notify extends CI_Controller
                 );
                 $res1 = $this->loop_model->insert('order_collection_doc',$collection_data);
                 //插入记录
-                $cashdata['order_id'] = $checkRes['id'];
-                $cashdata['m_id'] = $checkRes['share_uid'];
-                $cashdata['type'] = 1;
-                $cashdata['addtime'] = time();
-                $cashdata['date'] = date("Y-m-d",time());
-                $cash = $this->loop_model->insert('cash',$cashdata);
+                if($rakeres) {
+                    $cashdata['order_id'] = $checkRes['id'];
+                    $cashdata['m_id'] = $checkRes['share_uid'];
+                    $cashdata['type'] = 1;
+                    $cashdata['addtime'] = time();
+                    $cashdata['addtime'] = time();
+                    $cashdata['cash'] = $rakeres['rake_price'];
+                    $cashdata['date'] = date("Y-m-d", time());
+                    $cash = $this->loop_model->insert('cash', $cashdata);
+                }
                 if($res1 > 0 && $cash > 0){
                     $this->db->trans_commit();
                 }else{

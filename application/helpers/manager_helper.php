@@ -87,4 +87,23 @@ if (!function_exists('admin_log_insert')) {
     }
 }
 
+/**
+ * 返现操作记录
+ */
+if (!function_exists('cash_log_insert')) {
+    function cash_log_insert($note = '')
+    {
+        if (!empty($note)) {
+            $CI = &get_instance();
+            $admin_data = get_manager_data();
+            $CI->load->model('loop_model');
+            $insert_data = array(
+                'admin_user' => $admin_data['username'],
+                'note'       => $note,
+                'addtime'    => date('Y-m-d H:i:s',time()),
+            );
+            $CI->loop_model->insert('cash_log', $insert_data);
+        }
+    }
+}
 
