@@ -755,28 +755,53 @@ class User extends CI_Controller
     //批量返现
     public function reback_batch(){
         $id = $this->input->post('id', true);
-        if (empty($id)) error_json('id错误');
         $this->load->library('minipay/WxPayApi');
         $this->load->library('minipay/WxPayJsApiPay');
         $this->load->library('minipay/WxPayConfig');
         $this->load->library('minipay/JsApiPay');
         foreach($id as $v){
-            //查看改订单是否满足未返现
-            $order = $this->loop_model->where('id', $v['id'])->where('rake_id',0)->find();//未支付订单
-            if(!$order){
+            //查看是否满足未返现
+            $cash = $this->loop_model->get_where('cash',array('id'=>$v['id'],'state'=>0));//未支付订单
+            if(!$cash){
                 //记录
-
+                cash_log_insert('该返现不存在活不满足条件',$v['id'],1);
             }
             //查看该用户是否存在
-            $user = $this->loop_model->get_where('user',array('id'=>$order['m_id']));
-            if($user){
+            $user = $this->loop_model->get_where('user',array('id'=>$cash['m_id']));
+            if(!$user){
                 //记录
-
+                cash_log_insert('该用户不存在',$v['id'],1);
             }
-            $openid = $user['openid'];
+            //$openid = $user['openid'];
+            $openid = 'onP6t4lxZptgdn4F0SyYkewm2SHI';
             $this->db->trans_start();
-            $update_data['rake_id'] = 1;//已返佣
-            $res = $this->loop_model->update_where('order', $update_data, ['id'=>$v['id']]);
+            //$update_data['rake_id'] = 1;//已返佣
+            //$res = $this->loop_model->update_where('order', $update_data, ['id'=>$v['id']]);
+            $partner_trade_no = time().getRandChar(18);
+            $input = new \WxPayBizCash();
+            $input->SetPartner_trade_no($partner_trade_no);
+            $input->SetDesc('cash');
+            $input->SetAmount($cash['cash']/100);
+            $input->SetCheck_name('NO_CHECK');
+            $input->SetOpenid($openid);
+            $config = new \WxPayConfig();
+            $order = \WxPayApi::transfers($config,$input);var_dump($order);exit;
+            if($order["return_code"]=="SUCCESS" && $order['result_code']=='SUCCESS'){
+                lyLog(var_export($order,true) , "refund" , true);
+                $UpdataWhere['id'] = $postData['id'];
+                $updateData['status'] = 2;//状态改为审核通过
+                $res = Db::table('add_cash')->where($UpdataWhere)->update($updateData);
+            }else if(($order['return_code']=='FAIL') || ($order['result_code']=='FAIL')){
+                //退款失败
+                //原因
+                $reason = (empty($order['err_code_des'])?$order['return_msg']:$order['err_code_des']);
+                $this->ResArr['code'] = "2";
+                $this->ResArr['msg'] = $reason;
+            }
+            else{
+                $this->ResArr['code'] = "2";
+                $this->ResArr['msg'] = "pay data error!";
+            }
             if ($res >=0 ) {
                 if($update_data['rake_id'] == 1 && $res > 0){
                     $update_data['ratetime'] = time();
