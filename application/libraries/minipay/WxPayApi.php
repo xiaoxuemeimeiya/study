@@ -631,7 +631,7 @@ class WxPayApi
 			//证书文件请放入服务器的非web目录下
 			$sslCertPath = "";
 			$sslKeyPath = "";
-			$config->GetSSLCertPath($sslCertPath, $sslKeyPath);var_dump($sslKeyPath);
+			$config->GetSSLCertPath($sslCertPath, $sslKeyPath);
 			curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
 			curl_setopt($ch,CURLOPT_SSLCERT, $sslCertPath);
 			curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
@@ -641,7 +641,7 @@ class WxPayApi
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
 		//运行curl
-		$data = curl_exec($ch);
+		$data = curl_exec($ch);var_dump($data);
 		//返回结果
 		if($data){
 			curl_close($ch);
