@@ -783,7 +783,7 @@ class User extends CI_Controller
             $input->SetCheck_name('NO_CHECK');
             $input->SetOpenid($openid);
             $config = new \WxPayConfig();
-            $order = \WxPayApi::transfers($config,$input);
+            $order = \WxPayApi::transfers($config,$input);lyLog(var_export($order,true) , "cash" , true);
             if($order["return_code"]=="SUCCESS" && $order['result_code']=='SUCCESS'){
                 $UpdataWhere['id'] = $v['id'];
                 $updateData['state'] = 1;//状态改为审核通过,已打现
@@ -804,6 +804,7 @@ class User extends CI_Controller
                 cash_log_insert('提现失败，pay data error!' ,$v['id'],0);
             }
         }
+        error_json('y');exit;
     }
 
     //审核提现
