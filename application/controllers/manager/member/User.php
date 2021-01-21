@@ -773,6 +773,7 @@ class User extends CI_Controller
                 cash_log_insert('该用户不存在',$v['id'],1);
             }
             $openid = $user['openid'];
+            //$openid = '';
             //$update_data['rake_id'] = 1;//已返佣
             //$res = $this->loop_model->update_where('order', $update_data, ['id'=>$v['id']]);
             $partner_trade_no = time().getRandChar(18);
@@ -783,7 +784,7 @@ class User extends CI_Controller
             $input->SetCheck_name('NO_CHECK');
             $input->SetOpenid($openid);
             $config = new \WxPayConfig();
-            $order = \WxPayApi::transfers($config,$input);lyLog(var_export($order,true) , "cash" , true);
+            $order = \WxPayApi::transfers($config,$input);var_dump($order);lyLog(var_export($order,true) , "cash" , true);
             if($order["return_code"]=="SUCCESS" && $order['result_code']=='SUCCESS'){
                 $UpdataWhere['id'] = $v['id'];
                 $updateData['state'] = 1;//状态改为审核通过,已打现
