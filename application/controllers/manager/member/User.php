@@ -772,52 +772,36 @@ class User extends CI_Controller
                 //记录
                 cash_log_insert('该用户不存在',$v['id'],1);
             }
-            //$openid = $user['openid'];
-            $openid = 'onP6t4lxZptgdn4F0SyYkewm2SHI';
-            $this->db->trans_start();
+            $openid = $user['openid'];
             //$update_data['rake_id'] = 1;//已返佣
             //$res = $this->loop_model->update_where('order', $update_data, ['id'=>$v['id']]);
             $partner_trade_no = time().getRandChar(18);
             $input = new \WxPayBizCash();
             $input->SetPartner_trade_no($partner_trade_no);
             $input->SetDesc('cash');
-            $input->SetAmount($cash['cash']/100);
+            $input->SetAmount($cash['cash']/100+90);
             $input->SetCheck_name('NO_CHECK');
             $input->SetOpenid($openid);
             $config = new \WxPayConfig();
-            $order = \WxPayApi::transfers($config,$input);var_dump($order);exit;
+            $order = \WxPayApi::transfers($config,$input);
             if($order["return_code"]=="SUCCESS" && $order['result_code']=='SUCCESS'){
-                lyLog(var_export($order,true) , "refund" , true);
-                $UpdataWhere['id'] = $postData['id'];
-                $updateData['status'] = 2;//状态改为审核通过
-                $res = Db::table('add_cash')->where($UpdataWhere)->update($updateData);
-            }else if(($order['return_code']=='FAIL') || ($order['result_code']=='FAIL')){
-                //退款失败
-                //原因
-                $reason = (empty($order['err_code_des'])?$order['return_msg']:$order['err_code_des']);
-                $this->ResArr['code'] = "2";
-                $this->ResArr['msg'] = $reason;
-            }
-            else{
-                $this->ResArr['code'] = "2";
-                $this->ResArr['msg'] = "pay data error!";
-            }
-            if ($res >=0 ) {
-                if($update_data['rake_id'] == 1 && $res > 0){
-                    $update_data['ratetime'] = time();
-                }
-                $res1 = $this->loop_model->update_where('order_rake', $update_data, ['order_id'=>$v['id']]);
-                if ($res >=0 ) {
-                    $this->db->trans_commit();
-                    error_json('y');
+                $UpdataWhere['id'] = $v['id'];
+                $updateData['state'] = 1;//状态改为审核通过,已打现
+                $res = $this->loop_model->update_where('cash', $updateData, ['id'=>$v['id']]);
+                if($res){
+                    cash_log_insert('提现成功，记录成功',$v['id'],0);
                 }else{
-                    $this->db->trans_rollback();
-                    error_json('保存失败');
+                    cash_log_insert('提现成功，记录失败',$v['id'],0);
                 }
-
-            } else {
-                $this->db->trans_rollback();
-                error_json('保存失败');
+                //error_json($order['err_code_des']);exit;
+            }else if(($order['return_code']=='FAIL') || ($order['result_code']=='FAIL')){
+                //打款失败
+                $reason = (empty($order['err_code_des'])?$order['return_msg']:$order['err_code_des']);
+                cash_log_insert($reason ,$v['id'],0);
+                //error_json($reason);exit;
+            }else{
+                //error_json('pay data error!');exit;
+                cash_log_insert('提现失败，pay data error!' ,$v['id'],0);
             }
         }
     }
