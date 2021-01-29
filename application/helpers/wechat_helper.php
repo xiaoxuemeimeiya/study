@@ -235,6 +235,7 @@ if (!function_exists('reg_weixin_member')) {
         }
     }
 }
+/*
 if(!function_exists('wx_userinfo')){
     require(APPPATH . 'third_party/wx/wxBizDataCrypt.php');
     $appid = 'wx4f4bc4dec97d474b';
@@ -269,3 +270,4 @@ if(!function_exists('wx_userinfo')){
         print($errCode . "\n");
     }
 }
+*/
