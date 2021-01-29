@@ -754,6 +754,7 @@ class User extends CI_Controller
 
     //批量返现
     public function reback_batch(){
+        $this->load->helpers('wechat_helper');
         $id = $this->input->post('id', true);
         $this->load->library('minipay/WxPayApi');
         $this->load->library('minipay/WxPayJsApiPay');
@@ -780,12 +781,12 @@ class User extends CI_Controller
             $input = new \WxPayBizCash();
             $input->SetPartner_trade_no($partner_trade_no);
             $input->SetDesc('cash');
-            $input->SetAmount($cash['cash']/100);
-            //$input->SetAmount(101);
+            //$input->SetAmount($cash['cash']/100);
+            $input->SetAmount(101);
             $input->SetCheck_name('NO_CHECK');
             $input->SetOpenid($openid);
             $config = new \WxPayConfig();
-            $order = \WxPayApi::transfers($config,$input);var_dump($order); lyLog(var_export($order,true) , "cash" , true);
+            $order = \WxPayApi::transfers($config,$input);var_dump($order); var_dump($order["return_code"]);lyLog(var_export($order,true) , "cash" , true);
             if($order["return_code"]=="SUCCESS" && $order['result_code']=='SUCCESS'){
                 $UpdataWhere['id'] = $v['id'];
                 $updateData['state'] = 1;//状态改为审核通过,已打现
