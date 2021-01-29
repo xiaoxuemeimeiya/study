@@ -912,12 +912,10 @@ class User extends CI_Controller
                 $insertdate['date'] = $v['date'];
                 $insertdate['cash'] = $v['cash'];
 
-                $this->loop_model->insert('cash',$insertdate );
+                $res = $this->loop_model->insert('cash',$insertdate );
+                lyLog(var_export(array('data'=>$insertdate,'statue'=>$res),true) , "res" , true);
             }
-            var_dump($list_data);
         }
-
-
     }
 
     //单个返现
