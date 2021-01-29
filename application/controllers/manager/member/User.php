@@ -762,16 +762,16 @@ class User extends CI_Controller
         $this->load->library('minipay/JsApiPay');
         foreach($id as $v){
             //查看是否满足未返现
-            $cash = $this->loop_model->get_where('cash',array('id'=>$v['id'],'state'=>0));//未支付订单
+            $cash = $this->loop_model->get_where('cash',array('id'=>$v,'state'=>0));//未支付订单
             if(!$cash){
                 //记录
-                cash_log_insert('该返现不存在活不满足条件',$v['id'],1);
+                cash_log_insert('该返现不存在活不满足条件',$v,1);
             }
             //查看该用户是否存在
             $user = $this->loop_model->get_where('user',array('id'=>$cash['m_id']));
             if(!$user){
                 //记录
-                cash_log_insert('该用户不存在',$v['id'],1);
+                cash_log_insert('该用户不存在',$v,1);
             }
             $openid = $user['openid'];
             //$openid = '';
@@ -786,26 +786,26 @@ class User extends CI_Controller
             $input->SetCheck_name('NO_CHECK');
             $input->SetOpenid($openid);
             $config = new \WxPayConfig();
-            $order = \WxPayApi::transfers($config,$input);var_dump($order); var_dump($order["return_code"]);lyLog(var_export($order,true) , "cash" , true);
+            $order = \WxPayApi::transfers($config,$input);lyLog(var_export($order,true) , "cash" , true);
             if($order["return_code"]=="SUCCESS" && $order['result_code']=='SUCCESS'){
-                $UpdataWhere['id'] = $v['id'];
+                $UpdataWhere['id'] = $v;
                 $updateData['state'] = 1;//状态改为审核通过,已打现
-                $res = $this->loop_model->update_where('cash', $updateData, ['id'=>$v['id']]);
+                $res = $this->loop_model->update_where('cash', $updateData, ['id'=>$v]);
                 lyLog(var_export($res,true) , "res" , true);
                 if($res){
-                    cash_log_insert('提现成功，记录成功',$v['id'],0);
+                    cash_log_insert('提现成功，记录成功',$v,0);
                 }else{
-                    cash_log_insert('提现成功，记录失败',$v['id'],0);
+                    cash_log_insert('提现成功，记录失败',$v,0);
                 }
                 //error_json($order['err_code_des']);exit;
             }else if(($order['return_code']=='FAIL') || ($order['result_code']=='FAIL')){lyLog(var_export(555,true) , "res" , true);
                 //打款失败
                 $reason = (empty($order['err_code_des'])?$order['return_msg']:$order['err_code_des']);
-                cash_log_insert($reason ,$v['id'],1);
+                cash_log_insert($reason ,$v,1);
                 //error_json($reason);exit;
             }else{lyLog(var_export(444,true) , "res" , true);
                 //error_json('pay data error!');exit;
-                cash_log_insert('提现失败，pay data error!' ,$v['id'],1);
+                cash_log_insert('提现失败，pay data error!' ,$v,1);
             }
         }
         error_json('y');exit;
