@@ -744,7 +744,13 @@ class User extends CI_Controller
         $where_data['select'] = 'a.nickname as nickname,a.headimgurl as headimgurl,u.*';
         //查到数据
         $list_data = $this->loop_model->get_group_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc','u.m_id,u.date');//列表
-
+        foreach($list_data as $k=>$v){
+            $where_detail['where'] = array('cash_id'=>$v['id']);
+            $detail = $this->loop_model->get_list('cash_log',$where_detail,1,0,'id desc');//未支付订单
+            $v['note'] = $detail[0]['note'];
+            $v['log_id'] = $detail[0]['id'];
+            $list_data[$k] = $v;
+        }
         assign('list', $list_data);
         //开始分页start
         $all_rows = $this->loop_model->get_list_num('cash as u', $where_data);//所有数量

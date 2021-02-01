@@ -70,7 +70,8 @@
 				<th width="50">返佣金额</th>
 				<th width="50">返佣状态</th>
 				<th width="80">结算时间</th>
-				<th width="110">操作</th>
+				<th width="150">备注</th>
+				<th width="50">操作</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -91,6 +92,7 @@
 					<{/if}>
 				</td>
 				<td><{$key.date}></td>
+				<td><{$key.note}></td>
 				<td class="f-14 td-manage">
 					<{if $key.state !=1}>
 					<a style="text-decoration:none" class="ml-5" onClick="open_iframe('返现','<{site_url("/manager/member/user/reback_rate/<{$key.id}>")}>','100%')" href="javascript:;" title="返现"><i class="Hui-iconfont">&#xe6df;</i></a>
@@ -151,6 +153,7 @@
 						{
 							//批量删除的刷新页面
 							window.location.reload();
+							layer.msg('操作成功!');
 						}
 						else
 						{
