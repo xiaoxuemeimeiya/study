@@ -717,9 +717,9 @@ class User extends CI_Controller
         $page     = (int)$this->input->get('per_page');
         $page <= 1 ? $page = 1 : $page = $page;//当前页数
         //搜索条件start
-        $status = $this->input->post_get('type');
+        $status = $this->input->post_get('state');
         if (isset($status) && $status != '') {
-            $where_data['where'] = array('u.type' => $status);
+            $where_data['where'] = array('u.state' => $status);
         }
         //搜索条件starttime,endtime
         $time = $this->input->post_get('time');
@@ -751,6 +751,8 @@ class User extends CI_Controller
             $v['log_id'] = $detail[0]['id'];
             $list_data[$k] = $v;
         }
+        $list_date = $this->loop_model->get_group_list('cash', '', '', '', 'id asc','date');//列表
+        assign('list_date', $list_date);
         assign('list', $list_data);
         //开始分页start
         $all_rows = $this->loop_model->get_list_num('cash as u', $where_data);//所有数量
