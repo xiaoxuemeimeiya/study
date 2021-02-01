@@ -796,6 +796,7 @@ class User extends CI_Controller
             if($order["return_code"]=="SUCCESS" && $order['result_code']=='SUCCESS'){
                 $UpdataWhere['id'] = $v;
                 $updateData['state'] = 1;//状态改为审核通过,已打现
+                $updateData['cashtime'] = time();
                 $res = $this->loop_model->update_where('cash', $updateData, ['id'=>$v]);
                 lyLog(var_export($res,true) , "res" , true);
                 if($res){
@@ -808,9 +809,13 @@ class User extends CI_Controller
                 //打款失败
                 $reason = (empty($order['err_code_des'])?$order['return_msg']:$order['err_code_des']);
                 cash_log_insert($reason ,$v,1);
+                $updateData['cashtime'] = time();
+                $res = $this->loop_model->update_where('cash', $updateData, ['id'=>$v]);
                 //error_json($reason);exit;
             }else{lyLog(var_export(444,true) , "res" , true);
                 //error_json('pay data error!');exit;
+                $updateData['cashtime'] = time();
+                $res = $this->loop_model->update_where('cash', $updateData, ['id'=>$v]);
                 cash_log_insert('提现失败，pay data error!' ,$v,1);
             }
         }
