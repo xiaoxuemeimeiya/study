@@ -30,4 +30,37 @@ class Cat extends CI_Controller
 
     }
 
+    public function day_rate_log(){
+        $this->load->helpers('wechat_helper');
+        //搜索条件start
+        $where_data['where'] = array('type' => 2);
+        $where_data['where'] = array('state' => 0);
+        $where_data['date'] = date("Y-m-d",time());
+        //判断时间（每晚10-10：30执行）
+        $starttime = strtotime(date("Y-m-d",time()))+16*60*60;
+        $endtime = strtotime(date("Y-m-d",time()))+22*60*60+30*60;
+
+        if(time() >= $starttime && time() <=$endtime ){
+            //执行
+            $where_data['select'] = 'sum(cash) as cash,m_id,date';
+
+            //查到数据
+            $list_data = $this->loop_model->get_group_list('cash', $where_data,'', '', 'id desc','m_id,date');//列表
+            foreach($list_data as $v){
+                //根据date查找
+                $date = date("Y-m-d",time());
+                $res1 = $this->loop_model->update_where('cash', ['state'=>1],['date'=>$date,'type'=>1] );
+                //生成提现记录
+                $insertdate['m_id'] = $v['m_id'];
+                $insertdate['type'] = 2;//提现
+                $insertdate['addtime'] = time();
+                $insertdate['date'] = $v['date'];
+                $insertdate['cash'] = $v['cash'];
+
+                $res = $this->loop_model->insert('cash',$insertdate );
+                lyLog(var_export(array('data'=>$insertdate,'statue'=>$res),true) , "res" , true);
+            }
+        }
+    }
+
 }
