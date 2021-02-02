@@ -33,9 +33,9 @@ class Cat extends CI_Controller
     public function day_rate_log(){
         $this->load->helpers('wechat_helper');
         //搜索条件start
-        $where_data['where'] = array('type' => 2);
-        $where_data['where'] = array('state' => 0);
-        $where_data['date'] = date("Y-m-d",time());
+        $where_data['where']['type'] =1;
+        $where_data['where']['state'] = 0;
+        $where_data['where']['date'] = date("Y-m-d",time());
         //判断时间（每晚10-10：30执行）
         $starttime = strtotime(date("Y-m-d",time()))+16*60*60;
         $endtime = strtotime(date("Y-m-d",time()))+22*60*60+30*60;
@@ -43,9 +43,9 @@ class Cat extends CI_Controller
         if(time() >= $starttime && time() <=$endtime ){
             //执行
             $where_data['select'] = 'sum(cash) as cash,m_id,date';
-
             //查到数据
-            $list_data = $this->loop_model->get_group_list('cash', $where_data,'', '', 'id desc','m_id,date');//列表
+            //$list_data = $this->loop_model->get_group_list('cash', $where_data,'', '', 'id desc','m_id,date','');//列表
+            $list_data = $this->loop_model->get_list('cash', $where_data,'', '', 'id desc');//列表
             foreach($list_data as $v){
                 //根据date查找
                 $date = date("Y-m-d",time());
