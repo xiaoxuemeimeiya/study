@@ -37,7 +37,7 @@ class Cat extends CI_Controller
         $where_data['where']['state'] = 0;
         $where_data['where']['date'] = date("Y-m-d",time());
         //判断时间（每晚10-10：30执行）
-        $starttime = strtotime(date("Y-m-d",time()))+16*60*60;
+        $starttime = strtotime(date("Y-m-d",time()))+22*60*60;
         $endtime = strtotime(date("Y-m-d",time()))+22*60*60+30*60;
 
         if(time() >= $starttime && time() <=$endtime ){
