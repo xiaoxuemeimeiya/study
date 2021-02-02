@@ -44,8 +44,7 @@ class Cat extends CI_Controller
             //执行
             $where_data['select'] = 'sum(cash) as cash,m_id,date';
             //查到数据
-            //$list_data = $this->loop_model->get_group_list('cash', $where_data,'', '', 'id desc','m_id,date','');//列表
-            $list_data = $this->loop_model->get_list('cash', $where_data,'', '', 'id desc');//列表
+            $list_data = $this->loop_model->get_group_list('cash', $where_data,'', '', 'id desc','m_id,date','');//列表
             foreach($list_data as $v){
                 //根据date查找
                 $date = date("Y-m-d",time());
