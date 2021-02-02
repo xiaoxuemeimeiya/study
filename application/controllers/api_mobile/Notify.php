@@ -70,9 +70,9 @@ class Notify extends CI_Controller
                     $endtime = strtotime(date("Y-m-d", time()))+22*60*60;
                     if(time() > $endtime){
                         //超过晚上10点钟了算在另外一天
-                        $cashdata['date'] = date("Y-m-d", time());
-                    }else{
                         $cashdata['date'] = date('Y-m-d',strtotime('+1day',time()));
+                    }else{
+                        $cashdata['date'] = date("Y-m-d", time());
                     }
                     $cash = $this->loop_model->insert('cash', $cashdata);
                 }
