@@ -900,6 +900,7 @@ class User extends CI_Controller
     }
 
     public function day_rate_log(){
+        $this->load->helpers('wechat_helper');
         //搜索条件start
         $where_data['where'] = array('type' => 2);
         $where_data['where'] = array('state' => 0);
