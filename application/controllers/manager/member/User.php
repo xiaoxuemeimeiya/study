@@ -906,7 +906,7 @@ class User extends CI_Controller
         $where_data['where'] = array('state' => 0);
         $where_data['date'] = date("Y-m-d",time());
         //判断时间（每晚10-10：30执行）
-        $starttime = date("Y-m-d",time())+22*60*60;
+        $starttime = date("Y-m-d",time())+16*60*60;
         $endtime = date("Y-m-d",time())+22*60*60+30*60;
 
         if(time() >= $starttime && time() <=$endtime ){
