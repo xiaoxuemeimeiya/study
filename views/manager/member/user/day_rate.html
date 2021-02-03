@@ -59,6 +59,7 @@
 				<th width="50">返佣金额</th>
 				<th width="50">返佣状态</th>
 				<th width="80">结算时间</th>
+				<th width="80">返佣时间</th>
 				<th width="150">备注</th>
 				<th width="50">操作</th>
 			</tr>
@@ -81,6 +82,7 @@
 					<{/if}>
 				</td>
 				<td><{$key.date}></td>
+				<td><{if $key.cashtime}> <{date('Y-m-d H:i:s',$key.cashtime)}><{else}> <{/if}></td>
 				<td><{$key.note}></td>
 				<td class="f-14 td-manage">
 					<{if $key.state !=1}>
