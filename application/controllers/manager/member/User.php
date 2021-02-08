@@ -802,7 +802,7 @@ class User extends CI_Controller
             $input = new \WxPayBizCash();
             $input->SetPartner_trade_no($partner_trade_no);
             $input->SetDesc('cash');
-            $input->SetAmount($cash['cash']/100);
+            $input->SetAmount($cash['rake_price']/100);
             //$input->SetAmount(101);
             $input->SetCheck_name('NO_CHECK');
             $input->SetOpenid($openid);
