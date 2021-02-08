@@ -816,7 +816,8 @@ class User extends CI_Controller
                 $updateData['state'] = 1;//状态改为审核通过,已打现
                 $updateData['cashtime'] = time();
                 $res = $this->loop_model->update_where('cash', $updateData, $UpdataWhere);
-                $res1 = $this->loop_model->update_where('order_rake', ['rake_id'=>1,'ratetime'=>time()],$UpdataWhere );
+                $OrderRakeWhere['order_id'] = $orderDetail['id'];
+                $res1 = $this->loop_model->update_where('order_rake', ['rake_id'=>1,'ratetime'=>time()],$OrderRakeWhere );
                 $res1 = $this->loop_model->update_where('order', ['rake_id'=>1],['id'=>$orderDetail['id']] );
                 lyLog(var_export($res,true) , "res" , true);
                 if($res){
