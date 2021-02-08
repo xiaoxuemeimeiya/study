@@ -772,7 +772,7 @@ class User extends CI_Controller
     //批量返现(按订单返现)
     public function reback_batch_order(){
         $this->load->helpers('wechat_helper');
-        $id = $this->input->post('id', true);var_dump($id);exit;
+        $id = $this->input->post('id', true);
         $this->load->library('minipay/WxPayApi');
         $this->load->library('minipay/WxPayJsApiPay');
         $this->load->library('minipay/WxPayConfig');
@@ -794,6 +794,7 @@ class User extends CI_Controller
             //$openid = '';
             //$update_data['rake_id'] = 1;//已返佣
             //$res = $this->loop_model->update_where('order', $update_data, ['id'=>$v['id']]);
+            $cash = $this->loop_model->get_where('order_rate', ['order_id'=>$orderDetail['id'],'state'=>1,'rake_id'=>0]);
             $partner_trade_no = time().getRandChar(18);
             $input = new \WxPayBizCash();
             $input->SetPartner_trade_no($partner_trade_no);
