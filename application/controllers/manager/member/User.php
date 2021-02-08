@@ -629,20 +629,20 @@ class User extends CI_Controller
         //搜索条件start
         $rake_id = $this->input->post_get('rake_id');
         if (isset($rake_id) && $rake_id != '') {
-            $where_data['where']['o.rake_id'] = $rake_id;
+            $where_data['where']['u.rake_id'] = $rake_id;
         }
         $payment_status = $this->input->post_get('payment_status');
         if (isset($payment_status) && $payment_status != '') {
-            $where_data['where']['o.payment_status'] = $payment_status;
+            $where_data['where']['u.payment_status'] = $payment_status;
         }
         //搜索条件starttime,endtime
         $starttime = $this->input->post_get('starttime');
         $endtime = $this->input->post_get('endtime');
         if (isset($starttime) && $starttime != '') {
-            $where_data['where']['u.addtime >='] = $starttime;
+            $where_data['where']['k.addtime >='] = $starttime;
         }
         if (isset($endtime) && $endtime != '') {
-            $where_data['where']['u.addtime <='] = $endtime;
+            $where_data['where']['k.addtime <='] = $endtime;
         }
 
         //关键字
