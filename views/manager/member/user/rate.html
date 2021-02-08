@@ -16,7 +16,7 @@
 	<i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户管理 <span class="c-gray en">&gt;</span> 返佣列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
 </nav>
 <div class="pd-20" style="padding-top: 0px;">
-	<div class="text-c pt-20">
+	<div class="pt-20">
 		<form action='<{site_url("/manager/member/user/rate")}>' method="post" class="form form-horizontal" id="search" name="search">
 
 			<span class="select-box" style="width:150px">
@@ -26,14 +26,18 @@
 					<option value="1">已支付</option>
 				</select>
 			</span>
-			<span class="select-box" style="width:150px">
+			<span class="select-box" style="width:120px">
 				<select name="rake_id" class="select">
 					<option value="">返佣状态</option>
 					<option value="0">待返佣</option>
 					<option value="1">已返佣</option>
 				</select>
 			</span>
-			<span class="select-box" style="width:150px">
+			<span>
+				<input type="text" class="input-text" placeholder="开始时间" value="" name="starttime" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly  style="width: 150px">-
+                <input type="text" class="input-text" placeholder="结束时间" value="" name="endtime" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly  style="width: 150px">
+			</span>
+			<span class="select-box" style="width:120px">
 				<select name="keyword_where" class="select">
 					<option value="">选择条件</option>
 					<option value="o.order_no">订单号</option>
@@ -42,11 +46,7 @@
 					<option value="o.id">订单ID</option>
 				</select>
 			</span>
-			<span>
-				<input type="text" class="input-text" placeholder="开始时间" value="" name="starttime" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly  style="width: 150px">-
-                <input type="text" class="input-text" placeholder="结束时间" value="" name="endtime" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" readonly  style="width: 150px">
-			</span>
-			<input type="text" name="keyword" style="width:150px" class="input-text">
+			<input type="text" name="keyword" style="width:120px" class="input-text">
 			<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 			<button onclick="window.location.href='<{search_array_to_link($search_where)}>&export=1'" class="btn btn-primary" type="button"><i class="Hui-iconfont">&#xe640;</i> 导出</button>
 		</form>
