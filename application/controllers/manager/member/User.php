@@ -649,6 +649,8 @@ class User extends CI_Controller
         $keyword_where = $this->input->post_get('keyword_where');
         $keyword       = $this->input->post_get('keyword');
         if (!empty($keyword_where) && !empty($keyword)) $where_data['like'][$keyword_where] = $keyword;
+
+        $where_data['where']['u.share_uid >'] = 0;
         $search_where = array(
             'rake_id'   => $rake_id,
             'payment_status'   => $payment_status,
@@ -661,16 +663,17 @@ class User extends CI_Controller
         //搜索条件end
         $where_data['join']         = array(
             array('user as a', 'u.m_id=a.id'),
-            array('order_rake as k', 'k.order_id=u.order_id'),
-            array('order as o', 'k.order_id=o.id'),
-            array('user as b', 'o.m_id=b.id')
+            array('order_rake as k', 'k.order_id=u.id'),
+            //array('order as o', 'k.order_id=o.id'),
+            array('user as b', 'u.m_id=b.id')
         );
-        $where_data['select'] = 'a.nickname as top_nickname,a.headimgurl as top_headimgurl,k.*,k.id as rake_order_id,u.*,o.payment_status,o.rake_id,b.nickname,b.headimgurl';
+        $where_data['select'] = 'u.*,a.nickname as top_nickname,a.headimgurl as top_headimgurl,k.rake_price,k.order_price,b.nickname,b.headimgurl';
         //查到数据
-        $list_data = $this->loop_model->get_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc','');//列表
+        //$list_data = $this->loop_model->get_list('cash as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc','');//列表
+        $list_data = $this->loop_model->get_list('order as u', $where_data, $pagesize, $pagesize * ($page - 1), 'a.id desc','');//列表
         assign('list', $list_data);
         //开始分页start
-        $all_rows = $this->loop_model->get_list_num('cash as u', $where_data);//所有数量
+        $all_rows = $this->loop_model->get_list_num('order as u', $where_data);//所有数量
         assign('page_count', ceil($all_rows / $pagesize));
         display('/member/user/rate.html');
     }
