@@ -794,7 +794,7 @@ class User extends CI_Controller
             //$openid = '';
             //$update_data['rake_id'] = 1;//已返佣
             //$res = $this->loop_model->update_where('order', $update_data, ['id'=>$v['id']]);
-            $cash = $this->loop_model->get_where('order_rate', ['order_id'=>$orderDetail['id'],'state'=>1,'rake_id'=>0]);
+            $cash = $this->loop_model->get_where('order_rake', ['order_id'=>$orderDetail['id'],'state'=>1,'rake_id'=>0]);
             $partner_trade_no = time().getRandChar(18);
             $input = new \WxPayBizCash();
             $input->SetPartner_trade_no($partner_trade_no);
