@@ -639,10 +639,10 @@ class User extends CI_Controller
         $starttime = $this->input->post_get('starttime');
         $endtime = $this->input->post_get('endtime');
         if (isset($starttime) && $starttime != '') {
-            $where_data['where']['k.addtime >='] = $starttime;
+            $where_data['where']['u.paytime >='] = strtotime($starttime);
         }
         if (isset($endtime) && $endtime != '') {
-            $where_data['where']['k.addtime <='] = $endtime;
+            $where_data['where']['u.paytime <='] = strtotime($endtime);
         }
 
         //关键字
