@@ -662,7 +662,7 @@ class User extends CI_Controller
         assign('search_where', $search_where);
         //搜索条件end
         $where_data['join']         = array(
-            array('user as a', 'u.m_id=a.id'),
+            array('user as a', 'u.share_uid=a.id'),
             array('order_rake as k', 'k.order_id=u.id'),
             //array('order as o', 'k.order_id=o.id'),
             array('user as b', 'u.m_id=b.id')
