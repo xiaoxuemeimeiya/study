@@ -17,7 +17,7 @@
 </nav>
 <div class="pd-20" style="padding-top: 0px;">
 	<div class="text-c pt-20">
-		<form action='<{site_url("/manager/member/user/group/<{$m_id}>")}>' method="post" class="form form-horizontal" id="search" name="search">
+		<form action='<{site_url("/manager/member/user/rate")}>' method="post" class="form form-horizontal" id="search" name="search">
 
 			<span class="select-box" style="width:150px">
 				<select name="payment_status" class="select">
@@ -27,26 +27,18 @@
 				</select>
 			</span>
 			<span class="select-box" style="width:150px">
-				<select name="status" class="select">
-					<option value="">状态</option>
-					<option value="1">待支付</option>
-					<option value="2">待发货</option>
-					<option value="3">待确认</option>
-					<option value="4">待评价</option>
-					<option value="5">已评价</option>
-					<option value="6">退款</option>
-					<option value="7">部分退款</option>
-					<option value="8">交易取消</option>
-					<option value="9">订单作废</option>
-					<option value="9">返佣信息</option>
-					<option value="10">退款中</option>
+				<select name="rake_id" class="select">
+					<option value="">返佣状态</option>
+					<option value="0">待返佣</option>
+					<option value="1">已返佣</option>
 				</select>
 			</span>
 			<span class="select-box" style="width:150px">
 				<select name="keyword_where" class="select">
 					<option value="">选择条件</option>
 					<option value="o.order_no">订单号</option>
-					<option value="m.username">用户名</option>
+					<!--<option value="a.username">用户名</option>-->
+					<option value="a.nickname">用户昵称</option>
 					<option value="o.id">订单ID</option>
 				</select>
 			</span>
@@ -57,7 +49,7 @@
 	</div>
 	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">
 		<a href="<{site_url('/manager/user/rate/')}>" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe678;</i> 返回列表</a>
-		<a href="javascript:;" onclick="data_del(this,'<{site_url('/manager/user/reback_batch/')}>')" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe60b;</i> 批量返现</a>
+		<a href="javascript:;" onclick="data_del(this,'<{site_url('/manager/member/user/reback_batch/')}>')" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe60b;</i> 批量返现</a>
 	</span></div>
 	<div class="mt-20">
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
@@ -137,25 +129,54 @@
 		formObj.init(<{ch_json_encode($search_where)}>);
 	})
 
-	/*更新信息状态
-	 * @ids会员id 对象
-	 * @status 状态
-	 * */
-	function update_status(ids,status){
+	/*批量返现
+* @obj 对象
+* @url 连接地址
+* */
+	function cash_reback_batch(obj,url,ids){
+		var ids = arguments[2] ? arguments[2] :'';
+		if(ids=='')
+		{
+			//是否是批量返现
+			var ids = new Array();
+			$('[name="id[]"]:checked').each(
+					function(i){
+						//获取多选框的值
+						var idVal = $('[name="id[]"]:checked:eq('+i+')').val();
+						ids.push(idVal);
+					}
+			)
+		}
 		if(ids==''){
 			layer.msg('没有选择任何数据!');
 			return false;
 		}
-		$.ajax({
-			type:"POST",
-			url: "<{site_url('/manager/member/user/update_status')}>",
-			data:"id="+ids+"&status="+status,
-			dataType:"json",
-			success: function(data){
-				if(data.status!='y'){
-					layer.msg(data.info);
+		layer.confirm('确认要执行吗？',function(index){
+			$.ajax({
+				type:"POST",
+				url: url,
+				data:{'id':ids},
+				dataType:"json",
+				success: function(data){
+					if(data.status=='y'){
+						if($.isArray(ids))
+						{
+							//批量删除的刷新页面
+							window.location.reload();
+							layer.msg('操作成功!');
+						}
+						else
+						{
+							$(obj).parents("tr").remove();
+							layer.msg('操作成功!');
+						}
+					}
+					else
+					{
+						layer.msg(data.info);
+					}
 				}
-			}
+			});
 		});
 	}
 </script>
