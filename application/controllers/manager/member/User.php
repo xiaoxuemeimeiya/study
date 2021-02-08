@@ -813,6 +813,7 @@ class User extends CI_Controller
                 $updateData['cashtime'] = time();
                 $res = $this->loop_model->update_where('cash', $updateData, $UpdataWhere);
                 $res1 = $this->loop_model->update_where('order_rake', ['rake_id'=>1,'ratetime'=>time()],$UpdataWhere );
+                $res1 = $this->loop_model->update_where('order', ['rake_id'=>1],['id'=>$orderDetail['id']] );
                 lyLog(var_export($res,true) , "res" , true);
                 if($res){
                     cash_log_insert('提现成功，记录成功',$cash['id'],0);
