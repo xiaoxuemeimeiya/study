@@ -75,12 +75,21 @@ class Notify extends CI_Controller
                         $cashdata['date'] = date("Y-m-d", time());
                     }
                     $cash = $this->loop_model->insert('cash', $cashdata);
-                }
-                if($res1 > 0 && $cash > 0){
-                    $this->db->trans_commit();
+                    lyLog(var_export($cash,true) , "343paynotify" , true);
+                    lyLog(var_export($cashdata,true) , "343paynotify" , true);
+                    if($res1 > 0 && $cash > 0){
+                        $this->db->trans_commit();
+                    }else{
+                        $this->db->trans_rollback();
+                    }
                 }else{
-                    $this->db->trans_rollback();
+                    if($res1 > 0 ){
+                        $this->db->trans_commit();
+                    }else{
+                        $this->db->trans_rollback();
+                    }
                 }
+                
                 $temp["pay_money"] = $data["total_fee"]/100;
                 $temp["openid"] = $data["openid"];
                 $temp["prepay_id"] = $checkRes["prepay_id"];
